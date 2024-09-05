@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:inland_sales_upgrade/Activity_Apply_Leaves.dart';
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Login_Activity.dart';
@@ -110,7 +111,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                     crossAxisSpacing: 10,
                     children: [
                       buildCard(Icons.account_circle, "My HR",() async{
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Apply_Leaves()));
 
                       }),
                       buildCard(Icons.cases_rounded, "My Job",(){
