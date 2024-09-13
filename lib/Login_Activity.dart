@@ -1,17 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
+import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Network.dart';
-import 'package:inland_sales_upgrade/main.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Custom_Color_file.dart';
-import 'package:inland_sales_upgrade/Network.dart';
 
 class LoginPage extends StatefulWidget{
 
@@ -43,7 +37,7 @@ class _LoginPage extends State<LoginPage>{
       },
       );
       final http.Response response = await http.post(
-          Uri.parse("${Constant.baseurl+"/EmployeeLogin"}"),
+          Uri.parse("${Constant.baseurl+EndPoint.EmployeeLogin}"),
           body: jsonEncode(requestBody),
           headers: {"Content-Type": "application/json"}
       );
@@ -64,6 +58,7 @@ class _LoginPage extends State<LoginPage>{
       _IsSalesMan = responseData['IsSalesMan'];
       _LAST_PWDUPDT = responseData['LAST_PWDUPDT'];
       _PwdDays = responseData['PwdDays'];
+
       strEmpcd = requestBody['Empcd'];
       strPassword = requestBody['Password'];
 

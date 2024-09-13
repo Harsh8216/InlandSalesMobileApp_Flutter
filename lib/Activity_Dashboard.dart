@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:inland_sales_upgrade/Activity_Apply_Leaves.dart';
-import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
+import 'package:inland_sales_upgrade/Dashboard_HR.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Login_Activity.dart';
 import 'package:inland_sales_upgrade/Network.dart';
@@ -114,7 +112,8 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Apply_Leaves()));
 
                       }),
-                      buildCard(Icons.cases_rounded, "My Job",(){
+                      buildCard(Icons.cases_rounded, "My Activity",(){
+                        ShowToast("My Activity");
                         //Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppInland()));
                       }),
 
@@ -122,7 +121,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         ShowToast("Attendance");
 
                       }),
-                      buildCard(Icons.note_alt, "Report",(){
+                      buildCard(Icons.note_alt, "Request",(){
                         ShowToast("Report");
 
                       }),
@@ -130,7 +129,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         ShowToast("Finance");
 
                       }),
-                      buildCard(Icons.logout, "Logout",() async{
+                      buildCard(Icons.groups_sharp, "My Customer",() async{
                         await _Logout();
 
                       }),
@@ -147,19 +146,18 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
   Widget buildCard(IconData iconData,String text,VoidCallback onPressed){
     return GestureDetector(
         onTap: onPressed,
-        child : Card(elevation: 8, color: Colors.white,
-          child: Padding(padding: EdgeInsets.all(30),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(iconData, color: Color(CustomColor.Corp_Red.value),size: 50,),
+        child : Card(elevation: 8, color: Colors.black,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(iconData, color: Colors.white,size: 55,),
 
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(text,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black87)),
-                  )
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white)),
+                )
 
-                ]),
-          ),
+              ]),
         )
 
     );

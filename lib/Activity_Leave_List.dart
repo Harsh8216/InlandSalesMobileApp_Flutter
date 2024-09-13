@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inland_sales_upgrade/Apply_for_leaves.dart';
+import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Network.dart';
+import 'package:inland_sales_upgrade/ZigzagClipper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'Custom_Color_file.dart';
 
 class Activity_Leave_List extends StatefulWidget{
   @override
@@ -31,7 +32,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
     try{
       final http.Response responseBody = await http.post(
-        Uri.parse("${Constant.baseurl+"/GetEmployee_LeaveHistory"}"),
+        Uri.parse("${Constant.baseurl+EndPoint.GetEmployee_LeaveHistory}"),
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"},
       );
@@ -99,56 +100,59 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               elevation: 8,
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: 130,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0),topRight: Radius.circular(8.0)),
-                        color: Color(CustomColor.Corp_Red.value)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              children: [
-                                buildMenuShapeChange("From Date",Icons.calendar_month,dataList['FromDate']),
+                  ClipPath(
+                    clipper: ZigzagClipper(),
+                    child: Container(
+                      width: double.infinity,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0),topRight: Radius.circular(8.0)),
+                          color: Color(CustomColor.Corp_Red.value)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                children: [
+                                  buildMenuShapeChange("From Date",Icons.calendar_month,dataList['FromDate']),
 
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 100),
-                                  child: buildMenuShapeChange("To Date",Icons.calendar_month,dataList['TODate']),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 100),
+                                    child: buildMenuShapeChange("To Date",Icons.calendar_month,dataList['TODate']),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20,left: 10),
-                            child: Row(
-                              children: [
-                                Text("No. of Days : "+dataList['Days'],style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),),
-                                Padding(
-                                    padding: const EdgeInsets.only(left: 80),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.phone,color: Colors.white,size: 20,),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 5),
-                                          child: Text(dataList['EMobNo'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Colors.white)),
-                                        ),
-                                      ],
-                                    )
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20,left: 10),
+                              child: Row(
+                                children: [
+                                  Text("No. of Days : "+dataList['Days'],style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),),
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 80),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.phone,color: Colors.white,size: 20,),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 5),
+                                            child: Text(dataList['EMobNo'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Colors.white)),
+                                          ),
+                                        ],
+                                      )
+                                  ),
 
-                              ],
-                            ),
-                          )
-                        ],
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+
+
                       ),
 
-
                     ),
-
                   ),
                   Row(
                     children: [
@@ -192,6 +196,15 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       },
         itemCount: arrData.length,
 
+      ),
+
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Apply_for_leaves()));
+
+      },
+        backgroundColor: Color(CustomColor.Corp_blue.value),
+        tooltip: "Apply Leave",
+        child: Icon(Icons.add,color: Colors.white,),
       ),
     );
   }

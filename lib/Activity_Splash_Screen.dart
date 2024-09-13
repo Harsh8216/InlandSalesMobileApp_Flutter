@@ -1,11 +1,8 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inland_sales_upgrade/Login_Activity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'Activity_Bottom_Navigation_Bar.dart';
-import '../Login_Activity.dart';
 
 class SplashScreen extends StatefulWidget{
   @override

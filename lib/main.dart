@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'Activity_Splash_Screen.dart';
-import 'Custom_Color_file.dart';
 
 void main() {
   runApp(const MyApp());
