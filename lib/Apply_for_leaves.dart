@@ -1,12 +1,15 @@
 import 'dart:ui' as ui;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Edit_Text_Controler.dart';
 import 'package:inland_sales_upgrade/Network.dart';
+import 'package:inland_sales_upgrade/Utility.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Apply_for_leaves extends StatefulWidget {
@@ -32,15 +35,6 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
 
   }
 
-  void ShowToast(String Msg) {
-    Fluttertoast.showToast(msg: Msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        fontSize: 16,
-        backgroundColor: Colors.green,
-        textColor: Colors.white);
-  }
-  
   Future<void> fetchResponsiblePersons() async {
   var pref = await SharedPreferences.getInstance();
   String ? strEmpcd = pref.getString(Constant.Empcd);
@@ -72,17 +66,50 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
         print("responsiblePersonNames :  $responsiblePersonNames");
       });
     } else {
-      ShowToast("Error: ${responseBody.statusCode} - ${responseBody.reasonPhrase}");
+      Utility().ShowToast("Error: ${responseBody.statusCode} - ${responseBody.reasonPhrase}");
     }
 
   }catch (error) {
     print("Error: $error");
-    ShowToast("An error occurred: $error");
+    Utility().ShowToast("An error occurred: $error");
   }
 
   }
 
   void LeaveRequestFetchData() async{
+    if(FromDateController.text.isEmpty){
+      Utility().ShowToast("Please select a From Date.");
+      return;
+    }
+    if (ToDateController.text.isEmpty) {
+      Utility().ShowToast("Please select a To Date.");
+      return;
+    }
+
+    if (ResposiblePersonController.text.isEmpty) {
+      Utility().ShowToast("Please select a Responsible Person.");
+      return;
+    }
+
+    if(!RegExp(r'^[0-9]{10}$').hasMatch(ContactNoController.text)){
+      Utility().ShowToast("Please enter a valid 10-digit Contact Number.");
+      return;
+
+    }
+    if (ReasonController.text.isEmpty) {
+      Utility().ShowToast("Please provide a reason for leave.");
+      return;
+    }
+
+    DateTime fromDate = DateFormat('dd/mm/yyyy').parse(FromDateController.text);
+    DateTime ToDate = DateFormat('dd/mm/yyyy').parse(ToDateController.text);
+
+    if(fromDate.isAfter(ToDate)){
+      Utility().ShowToast("From Date cannot be after To Date.");
+      return;
+    }
+
+
     var pref = await SharedPreferences.getInstance();
     String ? strEmpcd = pref.getString(Constant.Empcd);
     final Map<String,String> requestBody = {
@@ -142,7 +169,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                   content: Text(strMsg,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
                   actions: <Widget>[
                     TextButton(onPressed: () {
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List()));
                     }, child: Text("OK"))
 
@@ -161,7 +188,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                   content: Text(strMsg,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
                   actions: <Widget>[
                     TextButton(onPressed: () {
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List()));
                     }, child: Text("OK"))
 
@@ -170,16 +197,15 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
               }
           );
 
-
         }
 
       }else{
-        ShowToast("Error: ${responseBody.statusCode} - ${responseBody.reasonPhrase}");
+        Utility().ShowToast("Error: ${responseBody.statusCode} - ${responseBody.reasonPhrase}");
       }
 
     }catch(error){
       print("Error: $error"); // Print the error for debugging
-      ShowToast("An error occurred: $error");
+      Utility().ShowToast("An error occurred: $error");
 
     }
 
@@ -269,6 +295,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
               readOnly: false,
               inputType:  TextInputType.phone,
               onTap:() => null,
+              inputFormater: [LengthLimitingTextInputFormatter(10)],
            ),
            SizedBox(height: 16),
 

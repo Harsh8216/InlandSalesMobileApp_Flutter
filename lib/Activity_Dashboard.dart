@@ -182,7 +182,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         fontSize: 16,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black54,
         textColor: Colors.white);
   }
 }

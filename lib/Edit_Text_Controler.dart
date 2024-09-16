@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 
 class EditTextField extends StatelessWidget {
@@ -7,6 +8,7 @@ class EditTextField extends StatelessWidget {
   final TextInputType inputType;
   final VoidCallback? onTap;
   final bool readOnly;
+  final List<TextInputFormatter> ? inputFormater;
 
   EditTextField({
     required this.controller,
@@ -14,6 +16,7 @@ class EditTextField extends StatelessWidget {
     required this.lable,
     this.onTap,
     this.readOnly = false,
+    this.inputFormater
 
 });
 
@@ -28,6 +31,7 @@ class EditTextField extends StatelessWidget {
         }
       },
       readOnly: readOnly,
+      inputFormatters: inputFormater,
       decoration: InputDecoration(
           labelText: lable,
           isDense: true,

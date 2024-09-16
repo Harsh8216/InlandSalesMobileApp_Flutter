@@ -21,5 +21,6 @@ class EndPoint{
   static const String GetEmployee_LeaveHistory = "/GetEmployee_LeaveHistory";
   static const String LeaveApply = "/LeaveApply";
   static const String GetEmployee_ResponsiblePerson = "/GetEmployee_ResponsiblePerson";
+  static const String LeaveDelete = "/LeaveDelete";
 
 }
