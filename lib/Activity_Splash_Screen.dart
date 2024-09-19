@@ -54,8 +54,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     Timer(Duration(seconds: 5),(){
       if(UserId != null) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => BottomNavBar()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
       }else{
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
       }

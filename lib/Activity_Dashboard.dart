@@ -5,6 +5,7 @@ import 'package:inland_sales_upgrade/Dashboard_HR.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Login_Activity.dart';
 import 'package:inland_sales_upgrade/Network.dart';
+import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Activity_Dashboard extends StatefulWidget{
@@ -40,7 +41,6 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         child: Stack(
             children: [
@@ -129,7 +129,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         ShowToast("Finance");
 
                       }),
-                      buildCard(Icons.groups_sharp, "My Customer",() async{
+                      buildCard(Icons.logout, "Logout",() async{
                         await _Logout();
 
                       }),
@@ -146,7 +146,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
   Widget buildCard(IconData iconData,String text,VoidCallback onPressed){
     return GestureDetector(
         onTap: onPressed,
-        child : Card(elevation: 8, color: Colors.black,
+        child : Card(elevation: 8, color: Colors.black87,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -170,7 +170,8 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
     await pref.remove("Password");
 
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logged out successfully',
+        SnackBar(
+            content: Text('Logged out successfully',
             style: const TextStyle(fontWeight: FontWeight.bold)),
             duration: Duration(seconds: 3)));
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));

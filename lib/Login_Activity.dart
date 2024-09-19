@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:inland_sales_upgrade/Activity_Bottom_Navigation_Bar.dart';
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Network.dart';
@@ -66,11 +67,11 @@ class _LoginPage extends State<LoginPage>{
         Fluttertoast.showToast(msg: 'Please Check your UserID and Password',toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.CENTER,
             backgroundColor: Colors.red,textColor: Colors.white);
       }else
-      if(_statusCode == 5000 && response.statusCode == 200){
+      if(response.statusCode == 200){
         await saveUserData(responseData);
         await saveID_PW(requestBody);
         Navigator.pop(context);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Activity_Dashboard()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
 
       }else {
         Navigator.pop(context);
@@ -99,6 +100,7 @@ class _LoginPage extends State<LoginPage>{
       await pref.setString(Constant.IsSalesMan, _IsSalesMan);
       await pref.setString(Constant.LAST_PWDUPDT, _LAST_PWDUPDT);
       await pref.setString(Constant.PwdDays, _PwdDays);
+
     }catch(error){
 
     }
@@ -246,12 +248,12 @@ class _LoginPage extends State<LoginPage>{
                   ),
                 ),
 
-
                 Positioned(
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: _buildVersionContainer())
+                    child: _buildVersionContainer()
+                )
 
               ],
             ),

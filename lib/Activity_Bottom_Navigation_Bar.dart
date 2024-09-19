@@ -3,6 +3,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
+import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
+
 class BottomNavBar extends StatefulWidget {
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -10,14 +12,12 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final List<Widget> _pages = [
-    Activity_Dashboard(),
-    Activity_Leave_List(),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       bottomNavigationBar: CurvedNavigationBar(
         animationDuration: Duration(milliseconds: 300),
@@ -31,15 +31,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
           Icon(Icons.account_circle,color: Colors.white,size: 30),
         ],
         onTap: (index){
+          if(index == 2){
+            _scaffoldKey.currentState?.openEndDrawer();
+          }else
           setState(() {
             _selectedIndex = index;
           });
-
         },
-
         backgroundColor: Colors.white,
       ),
-      body: _pages[_selectedIndex],
+      body: _selectedIndex == 0 ?
+      Activity_Dashboard() :
+      Activity_Leave_List(),
+      endDrawer: SideNavigationDrawer(),
 
     );
   }

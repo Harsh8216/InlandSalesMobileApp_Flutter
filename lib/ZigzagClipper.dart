@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 
 class ZigzagClipper extends CustomClipper<Path>{
   @override

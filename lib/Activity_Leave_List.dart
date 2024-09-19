@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
 import 'package:inland_sales_upgrade/Apply_for_leaves.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/MiddleRoundCutCliper.dart';
 import 'package:inland_sales_upgrade/Network.dart';
+import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 import 'package:inland_sales_upgrade/Utility.dart';
 import 'package:inland_sales_upgrade/ZigzagClipper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,9 +163,14 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: SideNavigationDrawer(),
       appBar: AppBar(title: Text("Leave List",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
           backgroundColor: Color(CustomColor.Corp_Red.value),iconTheme: IconThemeData(color: Colors.white)),
-      body: arrData.isEmpty ? Center(child: CircularProgressIndicator(color: Color(CustomColor.Corp_Red.value),backgroundColor: Colors.cyan,strokeWidth: 4.0,)) :
+      body: arrData.isEmpty ? Center(
+          child: CircularProgressIndicator(
+            color: Color(CustomColor.Corp_Red.value),
+            backgroundColor: Colors.cyan,
+            strokeWidth: 4.0,)) :
       ListView.builder(itemBuilder: (context, index) {
         var dataList = arrData[index];
         String LeaveID = dataList['LeaveID'];

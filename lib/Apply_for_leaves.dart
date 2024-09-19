@@ -8,6 +8,7 @@ import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Edit_Text_Controler.dart';
 import 'package:inland_sales_upgrade/Network.dart';
+import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 import 'package:inland_sales_upgrade/Utility.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -214,6 +215,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
   @override
   Widget build(BuildContext context) {
    return Scaffold(
+     endDrawer: SideNavigationDrawer(),
      appBar: AppBar(title: Text("Apply for Leaves",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)),
          backgroundColor: Color(CustomColor.Corp_Red.value),iconTheme: IconThemeData(color: Colors.white)),
      body: Padding(

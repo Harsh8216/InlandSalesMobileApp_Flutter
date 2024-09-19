@@ -1,5 +1,5 @@
 class Constant{
-  static const String baseurl = "http://inmobi.inland.in/V9/inmobi.svc";
+  static const String baseurl = "http://inmobi.inland.in/V11/inmobi.svc";
 
   static const String TokenNo = "OK";
   static const String Branch_Address = "Branch_Address";

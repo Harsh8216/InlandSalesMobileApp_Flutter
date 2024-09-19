@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
+import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 
 class Activity_Apply_Leaves extends StatefulWidget {
 
@@ -15,6 +16,7 @@ class ActivityApplyLeaves_State extends State<Activity_Apply_Leaves> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      endDrawer: SideNavigationDrawer(),
       appBar: AppBar(title: Text("Human Resources",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
       backgroundColor: Color(CustomColor.Corp_Red.value),iconTheme: IconThemeData(color: Colors.white)),
       body: Padding(
