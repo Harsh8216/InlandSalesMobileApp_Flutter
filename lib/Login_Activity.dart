@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Activity_Bottom_Navigation_Bar.dart';
@@ -9,6 +10,8 @@ import 'package:inland_sales_upgrade/Network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget{
+  final Function(ThemeData) onThemeChange;
+  LoginPage({required this.onThemeChange});
 
   @override
   _LoginPage createState() =>  _LoginPage();
@@ -33,7 +36,10 @@ class _LoginPage extends State<LoginPage>{
     try{
       showDialog(context: context, barrierDismissible: false, builder: (BuildContext context){
         return Center(
-            child: CircularProgressIndicator(color: Color(0xFFC00018),backgroundColor: Colors.cyanAccent,strokeWidth: 4.0,)
+            child: CircularProgressIndicator(
+              color: CustomColor.Corp_Red,
+              backgroundColor: CustomColor.Corp_Skyblue,
+              strokeWidth: 4.0,)
         );
       },
       );
@@ -64,6 +70,7 @@ class _LoginPage extends State<LoginPage>{
       strPassword = requestBody['Password'];
 
       if(_statusCode == 5001){
+        Navigator.pop(context);
         Fluttertoast.showToast(msg: 'Please Check your UserID and Password',toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.CENTER,
             backgroundColor: Colors.red,textColor: Colors.white);
       }else
@@ -71,7 +78,7 @@ class _LoginPage extends State<LoginPage>{
         await saveUserData(responseData);
         await saveID_PW(requestBody);
         Navigator.pop(context);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar(onThemeChange: widget.onThemeChange,)));
 
       }else {
         Navigator.pop(context);
@@ -182,6 +189,7 @@ class _LoginPage extends State<LoginPage>{
                                   height: 55,
                                   child: TextFormField(
                                     controller: UserIdController,
+                                    inputFormatters: [LengthLimitingTextInputFormatter(5)],
                                     keyboardType: TextInputType.number,
                                     decoration:  InputDecoration(
                                         prefixIcon: Icon(
@@ -290,7 +298,7 @@ class _LoginPage extends State<LoginPage>{
       ),
       child: Center(
         child: Text(
-          "Version : V1.0.0",
+          "Version : V1.1.1.0",
           style: TextStyle(
             color: Color(CustomColor.Corp_Red.value),
             fontWeight: FontWeight.w900,

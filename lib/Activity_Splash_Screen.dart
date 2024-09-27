@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Activity_Bottom_Navigation_Bar.dart';
 
 class SplashScreen extends StatefulWidget{
+  final Function(ThemeData) onThemeChange;
+  SplashScreen({required this.onThemeChange});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -52,11 +55,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     SharedPreferences pref = await SharedPreferences.getInstance();
     String ? UserId = pref.getString("user_id");
 
-    Timer(Duration(seconds: 5),(){
+    Timer(Duration(seconds: 3),(){
       if(UserId != null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar(onThemeChange: widget.onThemeChange)));
       }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(onThemeChange: widget.onThemeChange)));
       }
 
     });

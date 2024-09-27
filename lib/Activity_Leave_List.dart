@@ -12,6 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class Activity_Leave_List extends StatefulWidget{
+  final Function(ThemeData) onThemeChange;
+  Activity_Leave_List({required this.onThemeChange});
+
   @override
   State<Activity_Leave_List> createState() => _Activity_Leave_ListState();
 }
@@ -72,7 +75,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
         return Center(
           child: CircularProgressIndicator(
             color: CustomColor.Corp_Red,
-            backgroundColor: Colors.cyanAccent,
+            backgroundColor: CustomColor.Corp_Skyblue,
             strokeWidth: 4.0,
           ),
         );
@@ -98,7 +101,6 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
             Navigator.pop(context);
           }
 
-
           if(strStatus.toString() == 'OK'){
             showDialog(
                 context: context,
@@ -108,7 +110,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                     content: Text(strMsg,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                     actions: [
                       TextButton(onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Dashboard()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Dashboard(onThemeChange: widget.onThemeChange,)));
 
                       },
                           child: Text('OK'))
@@ -163,15 +165,26 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: SideNavigationDrawer(),
-      appBar: AppBar(title: Text("Leave List",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
-          backgroundColor: Color(CustomColor.Corp_Red.value),iconTheme: IconThemeData(color: Colors.white)),
+      endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
+      appBar: AppBar(
+          title: Text("Leave List",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold)),
+
+          backgroundColor: Theme.of(context).primaryColor,
+
+          iconTheme: IconThemeData(
+              color: Theme.of(context).canvasColor
+          )),
+
       body: arrData.isEmpty ? Center(
           child: CircularProgressIndicator(
             color: Color(CustomColor.Corp_Red.value),
             backgroundColor: Colors.cyan,
-            strokeWidth: 4.0,)) :
-      ListView.builder(itemBuilder: (context, index) {
+            strokeWidth: 4.0,
+          )) : ListView.builder(
+        itemBuilder: (context, index) {
         var dataList = arrData[index];
         String LeaveID = dataList['LeaveID'];
         IconData statusIcon = getIconForStatus(dataList['Status']);
@@ -186,7 +199,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
             child: ClipPath(
               clipper: MiddleRoundCutCliper(),
               child: Card(
-                color: Colors.white,
+                color: Theme.of(context).canvasColor,
                 elevation: 8,
                 child: Column(
                   children: [
@@ -195,9 +208,16 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                       child: Container(
                         width: double.infinity,
                         height: 120,
+
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0),topRight: Radius.circular(8.0)),
-                            color: Color(CustomColor.Corp_Red.value)),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8.0),
+                                topRight: Radius.circular(8.0)
+                            ),
+
+                            color: Theme.of(context).primaryColor
+                        ),
+
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Column(
@@ -206,11 +226,15 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Row(
                                   children: [
-                                    buildMenuShapeChange("From Date",Icons.calendar_month,dataList['FromDate']),
+                                    buildMenuShapeChange("From Date",
+                                        Icons.calendar_month,
+                                        dataList['FromDate']),
               
                                     Padding(
                                       padding: const EdgeInsets.only(left: 100),
-                                      child: buildMenuShapeChange("To Date",Icons.calendar_month,dataList['TODate']),
+                                      child: buildMenuShapeChange("To Date",
+                                          Icons.calendar_month,
+                                          dataList['TODate']),
                                     ),
                                   ],
                                 ),
@@ -219,15 +243,27 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                                 padding: const EdgeInsets.only(top: 20,left: 10),
                                 child: Row(
                                   children: [
-                                    Text("No. of Days : "+dataList['Days'],style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),),
+                                    Text("No. of Days : "+dataList['Days'],
+                                      style: TextStyle(fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).canvasColor
+                                      )),
                                     Padding(
                                         padding: const EdgeInsets.only(left: 80),
                                         child: Row(
                                           children: [
-                                            Icon(Icons.phone,color: Colors.white,size: 20,),
+                                            Icon(
+                                              Icons.phone,
+                                              color: Theme.of(context).canvasColor,
+                                              size: 20,),
                                             Padding(
                                               padding: const EdgeInsets.only(left: 5),
-                                              child: Text(dataList['EMobNo'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Colors.white)),
+                                              child: Text(
+                                                  dataList['EMobNo'],
+                                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: Theme.of(context).canvasColor
+                                                  )),
                                             ),
                                           ],
                                         )
@@ -246,15 +282,30 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                     ),
                     Row(
                       children: [
-                        buildMenu("Leave Apply Date",Icons.calendar_month,dataList['EntryDate']),
+                        buildMenu("Leave Apply Date",
+                            Icons.calendar_month,
+                            dataList['EntryDate']),
+
                         Padding(
-                            padding: const EdgeInsets.only(left: 90,top: 10),
+                            padding: const EdgeInsets.only(
+                                left: 90,
+                                top: 10
+                            ),
+
                             child: Row(
                               children: [
                                 Icon(StatusWidget.icon),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Text(dataList['Status'],style: TextStyle(color: colorStatus,fontWeight: FontWeight.bold,fontSize: 16)),
+                                  padding: const EdgeInsets.only(
+                                      left: 5
+                                  ),
+
+                                  child: Text(dataList['Status'],
+                                      style: TextStyle(
+                                          color: colorStatus,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      )),
                                 ),
                               ],
                             )
@@ -263,21 +314,41 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: buildMenu("Responsible Person",Icons.account_circle,dataList['ResPersonEmpnm']),
+                      padding: const EdgeInsets.only(
+                          top: 10
+                      ),
+                      child: buildMenu("Responsible Person",
+                          Icons.account_circle,
+                          dataList['ResPersonEmpnm']),
                     ),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(
+                              right: 10
+                          ),
+
                           child: dataList ['Status'] == 'Pending' ?
+
                           InkWell(onTap : (){
-                            showDialog(context: context, builder: (BuildContext buildContext){
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext buildContext){
                               return AlertDialog(
-                                title: Text('Alert',style: TextStyle(color: Colors.red,fontSize: 22,fontWeight: FontWeight.w900),),
-                                content: Text('Do you really want to delete pending leave',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
+                                title: Text('Alert',
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900
+                                  )),
+                                content: Text('Do you really want to delete pending leave',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16
+                                    )),
+
                                 actions: [
                                   TextButton(onPressed: (){
                                     LeaveDelete(LeaveID);
@@ -290,25 +361,44 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                                     
                                   }, child: Text('Cancel'))
                                 ],
-
-
-
                               );
 
                             });
 
                           },
-                              child: Icon(Icons.delete,color: Colors.red,size: 25,)) : SizedBox.shrink()),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 25,
+                              )) : SizedBox.shrink()),
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10,left: 5,right: 5),
+                      padding: const EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          right: 5
+                      ),
+
                       child: Container(
-                        decoration: BoxDecoration(border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.grey
+                            ),
+
+                            borderRadius: BorderRadius.circular(8.0)
+                        ),
+
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: buildMenuShapeChangeColor("Reason",Icons.receipt,dataList['Reason']),
+                          padding: const EdgeInsets.only(
+                              bottom: 10
+                          ),
+
+                          child: buildMenuShapeChangeColor("Reason",
+                              Icons.receipt,
+                              dataList['Reason']
+                          ),
+
                         ),
               
                       ),
@@ -327,12 +417,16 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       ),
 
       floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Apply_for_leaves()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Apply_for_leaves(onThemeChange: widget.onThemeChange)));
 
       },
-        backgroundColor: Color(CustomColor.Corp_Skyblue.value),
+        backgroundColor: Theme.of(context).focusColor,
         tooltip: "Apply Leave",
-        child: Icon(Icons.add,color: Colors.white,),
+        child: Icon(
+          Icons.add,
+          size: 30,
+          color: Theme.of(context).canvasColor,
+        ),
       ),
     );
   }
@@ -342,17 +436,41 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 10,left: 40),
-          child: Text(strText,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 10,color: Colors.black87)),
+          padding: EdgeInsets.only(
+              top: 10,
+              left: 40
+          ),
+
+          child: Text(strText,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                  color: Theme.of(context).primaryColorDark
+              )),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(
+              left: 10
+          ),
           child: Row(
             children: [
-              Icon(iconData,color: Colors.black87,size: 25,),
+              Icon(iconData,
+                color: Theme.of(context).primaryColorDark,
+                size: 25
+              ),
+
               Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(_strText,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black)),
+                padding: EdgeInsets.only(
+                    left: 5
+                ),
+
+                child: Text(_strText,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColorDark
+                    )),
+
               ),
             ],
           ),
@@ -366,17 +484,39 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(strText,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white)),
+          padding: EdgeInsets.only(
+              left: 10
+          ),
+
+          child: Text(strText,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Theme.of(context).canvasColor
+              )),
+
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(left: 10),
           child: Row(
             children: [
-              Icon(iconData,color: Colors.white,size: 15,),
+              Icon(iconData,
+                color: Theme.of(context).canvasColor,
+                size: 15,
+              ),
+
               Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(_strText,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white)),
+                padding: EdgeInsets.only(
+                    left: 5
+                ),
+
+                child: Text(_strText,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).canvasColor
+                    )),
+
               ),
             ],
           ),
@@ -390,17 +530,42 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(strText,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.black)),
+          padding: EdgeInsets.only(
+              left: 10
+          ),
+
+          child: Text(strText,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Theme.of(context).primaryColorDark
+              )),
+
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(
+              left: 10
+          ),
+
           child: Row(
             children: [
-              Icon(iconData,color: Colors.black,size: 15,),
+              Icon(iconData,
+                color: Theme.of(context).primaryColorDark,
+                size: 15
+              ),
+
               Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(_strText,style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.black)),
+                padding: EdgeInsets.only(
+                    left: 5
+                ),
+
+                child: Text(_strText,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColorDark
+                    )),
+
               ),
             ],
           ),

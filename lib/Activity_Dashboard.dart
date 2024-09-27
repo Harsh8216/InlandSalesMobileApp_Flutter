@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inland_sales_upgrade/Dashboard_HR.dart';
-import 'package:inland_sales_upgrade/Custom_Color_file.dart';
-import 'package:inland_sales_upgrade/Login_Activity.dart';
 import 'package:inland_sales_upgrade/Network.dart';
-import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Activity_Dashboard extends StatefulWidget{
+  final Function(ThemeData) onThemeChange;
+  Activity_Dashboard({required this.onThemeChange});
+
   @override
   State<Activity_Dashboard> createState() => _Activity_DashboardState();
 }
@@ -48,7 +48,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                 width: double.maxFinite,
                 height: 320,
                 decoration: BoxDecoration(
-                    color: Color(CustomColor.Corp_Red.value),
+                    color: Theme.of(context).primaryColor,
                     boxShadow: [
                       BoxShadow(
                           blurRadius: 4,
@@ -66,16 +66,27 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 60,top: 50),
-                      child: Text("Welcome",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 12)),
+                      child: Text("Welcome",
+                          style: TextStyle(
+                              color: Theme.of(context).canvasColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Icon(Icons.account_circle,color: Colors.white,size: 35,),
+                          Icon(
+                            Icons.account_circle,
+                            color: Theme.of(context).canvasColor,
+                            size: 35,),
                           Padding(
                             padding: const EdgeInsets.only(left: 6),
-                            child: Text(_Name,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)),
+                            child: Text(_Name,
+                                style: TextStyle(
+                                    color: Theme.of(context).canvasColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18)),
                           ),
                         ],
                       ),
@@ -84,9 +95,9 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: Center(
-                          child: const Text("Dashboard",
+                          child:  Text("Dashboard",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(context).canvasColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 22,
                                   fontFamily: 'Sora')
@@ -98,7 +109,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(top: 170),
+                padding:  EdgeInsets.only(top: 170),
                 child: Container(
                   width: double.maxFinite,
                   height: MediaQuery.of(context).size.height,
@@ -108,13 +119,14 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     children: [
-                      buildCard(Icons.account_circle, "My HR",() async{
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Apply_Leaves()));
-
-                      }),
                       buildCard(Icons.cases_rounded, "My Activity",(){
                         ShowToast("My Activity");
                         //Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppInland()));
+                      }),
+
+                      buildCard(Icons.account_circle, "My HR",() async{
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Apply_Leaves(onThemeChange: widget.onThemeChange,)));
+
                       }),
 
                       buildCard(Icons.access_time_filled, "Attendance",(){
@@ -129,8 +141,8 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         ShowToast("Finance");
 
                       }),
-                      buildCard(Icons.logout, "Logout",() async{
-                        await _Logout();
+                      buildCard(Icons.class_outlined, "Utility",() {
+                        ShowToast("Utility");
 
                       }),
                     ],
@@ -146,15 +158,23 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
   Widget buildCard(IconData iconData,String text,VoidCallback onPressed){
     return GestureDetector(
         onTap: onPressed,
-        child : Card(elevation: 8, color: Colors.black87,
+        child : Card(
+          elevation: 8,
+          color: Theme.of(context).cardColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(iconData, color: Colors.white,size: 55,),
+                Icon(iconData,
+                  color: Theme.of(context).indicatorColor,
+                  size: 50,),
 
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
-                  child: Text(text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white)),
+                  child: Text(text,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).hoverColor)),
                 )
 
               ]),
@@ -163,20 +183,6 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
     );
 
   }
-
-  Future <void> _Logout() async{
-    var pref = await SharedPreferences.getInstance();
-    await pref.remove("user_id");
-    await pref.remove("Password");
-
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Logged out successfully',
-            style: const TextStyle(fontWeight: FontWeight.bold)),
-            duration: Duration(seconds: 3)));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
-  }
-
 
   void ShowToast(String Msg){
     Fluttertoast.showToast(msg: Msg,

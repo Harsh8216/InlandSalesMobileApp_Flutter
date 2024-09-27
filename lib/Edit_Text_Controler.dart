@@ -40,7 +40,9 @@ class EditTextField extends StatelessWidget {
           ),
           contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 12),
           border: OutlineInputBorder(
-              borderSide: BorderSide(style: BorderStyle.solid,width: 2,color: Color(CustomColor.Corp_Skyblue.value)),
+              borderSide: BorderSide(
+                  style: BorderStyle.solid,width: 2,
+                  color: Theme.of(context).primaryColor),
               borderRadius: BorderRadius.all(Radius.circular(5))
           )
       ),

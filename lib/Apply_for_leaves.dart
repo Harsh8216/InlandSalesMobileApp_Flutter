@@ -14,6 +14,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Apply_for_leaves extends StatefulWidget {
+  final Function(ThemeData) onThemeChange;
+  Apply_for_leaves({required this.onThemeChange});
+
   @override
   State<Apply_for_leaves> createState() => ApplyForLeavesStates();
 
@@ -132,7 +135,11 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
           builder: (BuildContext contact){
 
             return Center(
-              child: CircularProgressIndicator(color: Color(0xFFC00018),backgroundColor: Colors.cyanAccent,strokeWidth: 4.0));
+              child: CircularProgressIndicator(
+                  color: CustomColor.Corp_Red,
+                  backgroundColor: CustomColor.Corp_Skyblue,
+                  strokeWidth: 4.0
+              ));
 
           }
       );
@@ -171,7 +178,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                   actions: <Widget>[
                     TextButton(onPressed: () {
                       //Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List(onThemeChange: widget.onThemeChange)));
                     }, child: Text("OK"))
 
                   ],
@@ -190,7 +197,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                   actions: <Widget>[
                     TextButton(onPressed: () {
                       //Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List(onThemeChange: widget.onThemeChange,)));
                     }, child: Text("OK"))
 
                   ],
@@ -215,9 +222,19 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
   @override
   Widget build(BuildContext context) {
    return Scaffold(
-     endDrawer: SideNavigationDrawer(),
-     appBar: AppBar(title: Text("Apply for Leaves",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)),
-         backgroundColor: Color(CustomColor.Corp_Red.value),iconTheme: IconThemeData(color: Colors.white)),
+     endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange,),
+     appBar: AppBar(title: Text("Apply for Leaves",
+         style: TextStyle(
+             color: Theme.of(context).canvasColor,
+             fontWeight: FontWeight.bold,
+             fontSize: 18
+         )),
+
+         backgroundColor: Theme.of(context).primaryColor,
+         iconTheme: IconThemeData(
+             color: Theme.of(context).canvasColor
+         )),
+
      body: Padding(
        padding: const EdgeInsets.all(12),
        child: Column(
@@ -315,7 +332,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
              
            },
              style: ElevatedButton.styleFrom(
-               backgroundColor: Color(CustomColor.Corp_Red.value),
+               backgroundColor: Theme.of(context).primaryColor,
                minimumSize: const ui.Size(180, 50),
                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
 

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
-import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
-import 'package:inland_sales_upgrade/Custom_Color_file.dart';
+import 'package:inland_sales_upgrade/Activity_GetLocation.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 
 class BottomNavBar extends StatefulWidget {
+  final Function(ThemeData) onThemeChange;  // Add this to receive the callback
+  BottomNavBar({required this.onThemeChange});  // Adjust the constructor
+
+
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
@@ -18,17 +21,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       bottomNavigationBar: CurvedNavigationBar(
         animationDuration: Duration(milliseconds: 300),
         animationCurve: Curves.fastEaseInToSlowEaseOut,
         height: 60,
-        buttonBackgroundColor: Color(CustomColor.Corp_Red.value),
-        color: Color(CustomColor.Corp_Red.value),
+        buttonBackgroundColor: Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         items: [
-          Icon(Icons.home,color: Colors.white,size: 30),
-          Icon(Icons.edit_location_alt,color: Colors.white,size: 30),
-          Icon(Icons.account_circle,color: Colors.white,size: 30),
+          Icon(
+              Icons.home,
+              color: Theme.of(context).canvasColor,
+              size: 30),
+
+          Icon(
+              Icons.edit_location_alt,
+              color: Theme.of(context).canvasColor,
+              size: 30),
+
+          Icon(
+              Icons.account_circle,
+              color: Theme.of(context).canvasColor,
+              size: 30),
         ],
         onTap: (index){
           if(index == 2){
@@ -41,9 +55,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
         backgroundColor: Colors.white,
       ),
       body: _selectedIndex == 0 ?
-      Activity_Dashboard() :
-      Activity_Leave_List(),
-      endDrawer: SideNavigationDrawer(),
+      Activity_Dashboard(onThemeChange: widget.onThemeChange) :
+      Activity_Get_Location(),
+      endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
 
     );
   }
