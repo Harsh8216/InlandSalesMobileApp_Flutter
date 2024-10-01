@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
@@ -29,8 +28,15 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
   var ContactNoController = TextEditingController();
   var ReasonController = TextEditingController();
   var strMsg;
+  bool isFocusNode = false;
   List<Map<String, String>> responsiblePerson = [];
   List<String> responsiblePersonNames = [];
+
+  @override
+  void dispose() {
+    ResposiblePersonController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -288,6 +294,14 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                  ResposiblePersonController.text = selectedPerson['ResPersonEmpcd'] ?? '';
            },
              fieldViewBuilder: (context, controller,focusNode,onEditingComplete){
+                 focusNode.addListener((){
+                   setState(() {
+                     isFocusNode = focusNode.hasFocus;
+
+                   });
+
+                 });
+
                  return TextFormField(
                      controller: controller,
                      focusNode: focusNode,
@@ -296,9 +310,28 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                      labelText: "Responsible Person",
                        isDense: true,
                        labelStyle: TextStyle(
-                           fontWeight: FontWeight.bold
+                           fontWeight: FontWeight.bold,
+                           color: focusNode.hasFocus ? Theme.of(context).primaryColor : Colors.grey
                        ),
-                     border: OutlineInputBorder(),
+                     border: OutlineInputBorder(
+                       borderSide: BorderSide(
+                         style: BorderStyle.solid,
+                         width: 2,
+                         color: Colors.grey,
+                       )
+
+                     ),
+
+                       focusedBorder: OutlineInputBorder(
+                         borderSide: BorderSide(
+                             color: Theme.of(context).primaryColor,
+                             width: 2
+                         ),
+                         borderRadius: BorderRadius.all(Radius.circular(5),
+                         ),
+
+                       ),
+
                ),
 
                  );
@@ -362,13 +395,13 @@ Future<void> _selectDate(BuildContext context,TextEditingController controller) 
         return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: ColorScheme.light(
-                primary: Color(CustomColor.Corp_Red.value),
+                primary: Theme.of(context).primaryColor,
                 onPrimary: Colors.white,
                 onSurface: Colors.black,
               ),
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(
-                  foregroundColor: Color(CustomColor.Corp_Red.value),
+                  foregroundColor: Theme.of(context).primaryColor,
                 )
               )
 

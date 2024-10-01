@@ -3,6 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
 import 'package:inland_sales_upgrade/Activity_GetLocation.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
+import 'package:inland_sales_upgrade/Utility.dart';
 
 class BottomNavBar extends StatefulWidget {
   final Function(ThemeData) onThemeChange;  // Add this to receive the callback
@@ -16,6 +17,7 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  LocationHelper locationHelper = LocationHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +52,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
           }else
           setState(() {
             _selectedIndex = index;
+            /*if(index == 1){
+              locationHelper.LocationAlertDialog(context);
+
+            }*/
+
           });
         },
         backgroundColor: Colors.white,
       ),
       body: _selectedIndex == 0 ?
-      Activity_Dashboard(onThemeChange: widget.onThemeChange) :
-      Activity_Get_Location(),
+      Activity_Dashboard(onThemeChange: widget.onThemeChange)
+      : Activity_Get_Location(),
       endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
 
     );

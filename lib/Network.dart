@@ -1,5 +1,5 @@
 class Constant{
-  static const String baseurl = "http://inmobi.inland.in/V11/inmobi.svc";
+  static const String baseurl = "http://inmobi.inland.in/V12/inmobi.svc";
 
   static const String TokenNo = "OK";
   static const String Branch_Address = "Branch_Address";
@@ -14,6 +14,7 @@ class Constant{
   static const String LAST_PWDUPDT = "LAST_PWDUPDT";
   static const String PwdDays = "PwdDays";
 
+  static const String Selected_Location = "Selected_Location";
 }
 
 class EndPoint{
@@ -22,5 +23,6 @@ class EndPoint{
   static const String LeaveApply = "/LeaveApply";
   static const String GetEmployee_ResponsiblePerson = "/GetEmployee_ResponsiblePerson";
   static const String LeaveDelete = "/LeaveDelete";
+  static const String GetLocation = "/GetLocation";
 
 }

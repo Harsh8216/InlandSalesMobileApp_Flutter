@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 
-class EditTextField extends StatelessWidget {
+class EditTextField extends StatefulWidget {
   final TextEditingController controller;
   final String lable;
   final TextInputType inputType;
@@ -16,38 +15,90 @@ class EditTextField extends StatelessWidget {
     required this.lable,
     this.onTap,
     this.readOnly = false,
-    this.inputFormater
+    this.inputFormater,
 
 });
 
   @override
+  State<EditTextField> createState() => _EditTextFieldState();
+}
+
+class _EditTextFieldState extends State<EditTextField> {
+  FocusNode focusNode = FocusNode();
+  bool isFocusNode = false;
+
+  @override
+  void initState() {
+    super.initState();
+   focusNode.addListener((){
+     setState(() {
+       isFocusNode = focusNode.hasFocus;
+
+     });
+
+   });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      keyboardType: inputType,
+      controller: widget.controller,
+      keyboardType: widget.inputType,
       onTap: (){
-        if(onTap != null){
-          onTap!();
+        if(widget.onTap != null){
+          widget.onTap!();
         }
       },
-      readOnly: readOnly,
-      inputFormatters: inputFormater,
+      readOnly: widget.readOnly,
+      inputFormatters: widget.inputFormater,
+      focusNode: focusNode,
       decoration: InputDecoration(
-          labelText: lable,
+          labelText: widget.lable,
           isDense: true,
           labelStyle: TextStyle(
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
+              color: isFocusNode ? Theme.of(context).primaryColor : Colors.grey,
           ),
           contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 12),
+
           border: OutlineInputBorder(
               borderSide: BorderSide(
-                  style: BorderStyle.solid,width: 2,
-                  color: Theme.of(context).primaryColor),
+                style: BorderStyle.solid,
+                width: 2,
+              ),
               borderRadius: BorderRadius.all(Radius.circular(5))
-          )
+          ),
+
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  style: BorderStyle.solid,
+                  width: 1,
+                  color: Colors.grey,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(5))
+          ),
+
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 2
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(5),
+            ),
+
+      ),
+        hintStyle: TextStyle(
+            color: isFocusNode ? Theme.of(context).primaryColor : Colors.grey
+        ),
+
       ),
 
     );
   }
 
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 }

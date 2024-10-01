@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inland_sales_upgrade/Activity_Bottom_Navigation_Bar.dart';
+import 'package:inland_sales_upgrade/Activity_GetLocation.dart';
 import 'package:inland_sales_upgrade/Color_Combination_Box.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Login_Activity.dart';
@@ -9,10 +12,10 @@ import 'package:inland_sales_upgrade/Network.dart';
 import 'package:inland_sales_upgrade/Utility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:http/http.dart' as http;
 
 class SideNavigationDrawer extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-
   SideNavigationDrawer({required this.onThemeChange});
 
   @override
@@ -20,14 +23,23 @@ class SideNavigationDrawer extends StatefulWidget{
 }
 
 class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
+  final TextEditingController Txt_locationController = TextEditingController();
   String strEmpName = "";
   String strUserId = "";
   String strLocation = "";
+  String strSelectedLocation = "";
+  LocationHelper locationHelper = LocationHelper();
+
+  List<Map<String,String>> hmGetLocation = [];
+  List<String> arrGetLocation = [];
+  var GetLocation_txt = TextEditingController();
+  bool isFocusNode = false;
 
   @override
   void initState() {
     super.initState();
     sharedPrefData();
+    locationHelper.getLocation(context);
   }
 
   Future<void> saveTheme(String themeName) async {
@@ -42,12 +54,14 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
       var _strEmpName = pref.getString(Constant.Name) ?? '';
       var _UserId = pref.getString(Constant.Empcd) ?? '';
       var _Location = pref.getString(Constant.CurrBrcd) ?? '';
+      var _strSelectedLocation = pref.getString(Constant.Selected_Location) ?? 'No Location Selected';
 
 
       setState(() {
         strEmpName = _strEmpName;
         strUserId = _UserId;
         strLocation = _Location;
+        strSelectedLocation = _strSelectedLocation;
       });
     } catch (error) {
       print(error);
@@ -81,7 +95,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                       SizedBox(
                         height: 4,
                       ),
-                      Text('Location : $strLocation',
+                      Text('Location : ${strSelectedLocation.isNotEmpty ? strLocation : strSelectedLocation}',
                           style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).canvasColor,
@@ -109,11 +123,12 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
             }),
 
             BuildDrawerMenuItems(
-                Icons.edit_location_alt, 'Change Location', () {
+                Icons.edit_location_alt, 'Change Location', () async{
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Get_Location()));
 
             }),
 
-            BuildDrawerMenuItems(Icons.settings, 'Setting', () {
+            BuildDrawerMenuItems(Icons.settings, 'App Setting', () {
               OpenAppSetting();
             }),
 
@@ -206,7 +221,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
           return AlertDialog(
             //backgroundColor: Colors.white,
             title: Center(
-              child: Text('Select a Theme',
+              child: Text('Select UI Themes',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
@@ -214,167 +229,170 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                 ),),
             ),
             content: Container(
-              height: 180,
+              height: 150,
               child: Center(
-                child: Wrap(
-                  spacing: 20.0, // Spacing between boxes
-                  runSpacing: 20.0, // Spacing between rows
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Wrap(
+                    spacing: 20.0, // Spacing between boxes
+                    runSpacing: 20.0, // Spacing between rows
 
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        widget.onThemeChange?.call(ThemeData(
-                            primaryColor: CustomColor.Corp_Skyblue,
-                            canvasColor: Colors.white,
-                            primaryColorDark: Colors.black,
-                            indicatorColor: CustomColor.Corp_Skyblue,
-                            hoverColor: Colors.black,
-                            focusColor: CustomColor.Corp_Red
-                        ));
-                        await saveTheme("Skyblue_white");
-                        Navigator.pop(context);
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          widget.onThemeChange ?.call(ThemeData(
+                              primaryColor: CustomColor.Corp_Skyblue,
+                              canvasColor: Colors.white,
+                              primaryColorDark: Colors.black,
+                              indicatorColor: CustomColor.Corp_Skyblue,
+                              hoverColor: Colors.black,
+                              focusColor: CustomColor.Corp_Red
+                          ));
+                          await saveTheme("Skyblue_white");
+                          Navigator.pop(context);
 
-                      },
-                      child: Column(
-                        children: [
-                          Color_Combination_Box(
-                            firstColor: CustomColor.Corp_Skyblue,
-                            secondColor: Colors.white,
-                            isHorizontal: false,
-                          )
-                        ],
-                      ) ,
-                    ),
+                        },
+                        child: Column(
+                          children: [
+                            Color_Combination_Box(
+                              firstColor: CustomColor.Corp_Skyblue,
+                              secondColor: Colors.white,
+                              isHorizontal: false,
+                            )
+                          ],
+                        ) ,
+                      ),
 
-                    GestureDetector(
-                      onTap: () async {
-                        widget.onThemeChange?.call(ThemeData(
-                            primaryColor: CustomColor.Corp_blue,
-                            canvasColor: Colors.white,
-                            primaryColorDark: Colors.black,
-                            indicatorColor: CustomColor.Corp_blue,
-                            hoverColor: Colors.black,
-                            focusColor: CustomColor.Corp_Red
-                        ));
-                        await saveTheme("Blue_White");
-                        Navigator.pop(context);
+                      GestureDetector(
+                        onTap: () async {
+                          widget.onThemeChange?.call(ThemeData(
+                              primaryColor: CustomColor.Corp_blue,
+                              canvasColor: Colors.white,
+                              primaryColorDark: Colors.black,
+                              indicatorColor: CustomColor.Corp_blue,
+                              hoverColor: Colors.black,
+                              focusColor: CustomColor.Corp_Red
+                          ));
+                          await saveTheme("Blue_White");
+                          Navigator.pop(context);
 
-                      },
-                      child: Column(
-                        children: [
-                          Color_Combination_Box(
-                            firstColor: CustomColor.Corp_blue,
-                            secondColor: Colors.white,
-                            isHorizontal: false,
-                          )
-                        ],
-                      ) ,
-                    ),
+                        },
+                        child: Column(
+                          children: [
+                            Color_Combination_Box(
+                              firstColor: CustomColor.Corp_blue,
+                              secondColor: Colors.white,
+                              isHorizontal: false,
+                            )
+                          ],
+                        ) ,
+                      ),
 
-                    GestureDetector(
-                      onTap: () async {
-                        widget.onThemeChange?.call(ThemeData(
-                            primaryColor: CustomColor.Corp_Red,
-                            canvasColor: Colors.white,
-                            primaryColorDark: Colors.black,
-                            indicatorColor: CustomColor.Corp_Red,
-                            hoverColor: Colors.black,
-                            focusColor: CustomColor.Corp_blue
-                        ));
-                        await saveTheme("Red_White");
-                        Navigator.pop(context);
+                      GestureDetector(
+                        onTap: () async {
+                          widget.onThemeChange?.call(ThemeData(
+                              primaryColor: CustomColor.Corp_Red,
+                              canvasColor: Colors.white,
+                              primaryColorDark: Colors.black,
+                              indicatorColor: CustomColor.Corp_Red,
+                              hoverColor: Colors.black,
+                              focusColor: CustomColor.Corp_blue
+                          ));
+                          await saveTheme("Red_White");
+                          Navigator.pop(context);
 
-                      },
-                      child: Column(
-                        children: [
-                          Color_Combination_Box(
-                            firstColor: CustomColor.Corp_Red,
-                            secondColor: Colors.white,
-                            isHorizontal: false,
-                          )
-                        ],
-                      ) ,
-                    ),
+                        },
+                        child: Column(
+                          children: [
+                            Color_Combination_Box(
+                              firstColor: CustomColor.Corp_Red,
+                              secondColor: Colors.white,
+                              isHorizontal: false,
+                            )
+                          ],
+                        ) ,
+                      ),
 
-                    GestureDetector(
-                      onTap: () async{
-                        widget.onThemeChange?.call(ThemeData(
-                            primaryColor: CustomColor.Corp_Red,
-                            canvasColor: Colors.white,
-                            primaryColorDark: Colors.black,
-                            cardColor: Colors.black87,
-                            indicatorColor: Colors.white,
-                            hoverColor: Colors.white,
-                            focusColor: CustomColor.Corp_blue
-                        ));
-                        await saveTheme("Red_Black");
-                        Navigator.pop(context);
+                      GestureDetector(
+                        onTap: () async{
+                          widget.onThemeChange?.call(ThemeData(
+                              primaryColor: CustomColor.Corp_Red,
+                              canvasColor: Colors.white,
+                              primaryColorDark: Colors.black,
+                              cardColor: Colors.black87,
+                              indicatorColor: Colors.white,
+                              hoverColor: Colors.white,
+                              focusColor: CustomColor.Corp_blue
+                          ));
+                          await saveTheme("Red_Black");
+                          Navigator.pop(context);
 
-                      },
-                      child: Column(
-                        children: [
-                          Color_Combination_Box(
-                            firstColor: CustomColor.Corp_Red,
-                            secondColor: Colors.black,
-                            isHorizontal: false,
-                          )
-                        ],
-                      ) ,
-                    ),
+                        },
+                        child: Column(
+                          children: [
+                            Color_Combination_Box(
+                              firstColor: CustomColor.Corp_Red,
+                              secondColor: Colors.black,
+                              isHorizontal: false,
+                            )
+                          ],
+                        ) ,
+                      ),
 
-                    GestureDetector(
-                      onTap: () async{
-                        widget.onThemeChange?.call(ThemeData(
-                            primaryColor: CustomColor.Corp_blue,
-                            canvasColor: Colors.white,
-                            primaryColorDark: Colors.black,
-                            indicatorColor: Colors.white,
-                            hoverColor: Colors.white,
-                            cardColor: Colors.black87,
-                            focusColor: CustomColor.Corp_Red
-                        ));
-                        await saveTheme("Blue_Black");
-                        Navigator.pop(context);
+                      GestureDetector(
+                        onTap: () async{
+                          widget.onThemeChange?.call(ThemeData(
+                              primaryColor: CustomColor.Corp_blue,
+                              canvasColor: Colors.white,
+                              primaryColorDark: Colors.black,
+                              indicatorColor: Colors.white,
+                              hoverColor: Colors.white,
+                              cardColor: Colors.black87,
+                              focusColor: CustomColor.Corp_Red
+                          ));
+                          await saveTheme("Blue_Black");
+                          Navigator.pop(context);
 
-                      },
-                      child: Column(
-                        children: [
-                          Color_Combination_Box(
-                            firstColor: CustomColor.Corp_blue,
-                            secondColor: Colors.black,
-                            isHorizontal: false,
-                          )
-                        ],
-                      ) ,
-                    ),
+                        },
+                        child: Column(
+                          children: [
+                            Color_Combination_Box(
+                              firstColor: CustomColor.Corp_blue,
+                              secondColor: Colors.black,
+                              isHorizontal: false,
+                            )
+                          ],
+                        ) ,
+                      ),
 
-                    GestureDetector(
-                      onTap: () async{
-                        widget.onThemeChange?.call(ThemeData(
-                            primaryColor: CustomColor.Corp_Skyblue,
-                            canvasColor: Colors.white,
-                            primaryColorDark: Colors.black,
-                            indicatorColor: Colors.white,
-                            hoverColor: Colors.white,
-                            cardColor: Colors.black87,
-                            focusColor: CustomColor.Corp_Red
-                        ));
-                        await saveTheme("Skyblue_Black");
-                        Navigator.pop(context);
+                      GestureDetector(
+                        onTap: () async{
+                          widget.onThemeChange?.call(ThemeData(
+                              primaryColor: CustomColor.Corp_Skyblue,
+                              canvasColor: Colors.white,
+                              primaryColorDark: Colors.black,
+                              indicatorColor: Colors.white,
+                              hoverColor: Colors.white,
+                              cardColor: Colors.black87,
+                              focusColor: CustomColor.Corp_Red
+                          ));
+                          await saveTheme("Skyblue_Black");
+                          Navigator.pop(context);
 
-                      },
-                      child: Column(
-                        children: [
-                          Color_Combination_Box(
-                            firstColor: CustomColor.Corp_Skyblue,
-                            secondColor: Colors.black,
-                            isHorizontal: false,
-                          )
-                        ],
-                      ) ,
-                    ),
+                        },
+                        child: Column(
+                          children: [
+                            Color_Combination_Box(
+                              firstColor: CustomColor.Corp_Skyblue,
+                              secondColor: Colors.black,
+                              isHorizontal: false,
+                            )
+                          ],
+                        ) ,
+                      ),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

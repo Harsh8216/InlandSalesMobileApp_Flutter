@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Color_Combination_Box extends StatelessWidget{
   final Color firstColor;
@@ -17,6 +18,15 @@ class Color_Combination_Box extends StatelessWidget{
     return Container(
       width: 50,
       height: 50,
+      
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black,
+          width: 1.0,
+          style: BorderStyle.solid
+        ),
+        borderRadius: BorderRadius.circular(2)
+      ),
 
       child: isHorizontal ? Row(
         children: [
