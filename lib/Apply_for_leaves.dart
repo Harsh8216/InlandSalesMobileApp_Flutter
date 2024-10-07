@@ -321,11 +321,19 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                        )
 
                      ),
+                       enabledBorder: OutlineInputBorder(
+                           borderSide: BorderSide(
+                             style: BorderStyle.solid,
+                             width: 1,
+                             color: Colors.grey,
+                           ),
+                           borderRadius: BorderRadius.all(Radius.circular(5))
+                       ),
 
                        focusedBorder: OutlineInputBorder(
                          borderSide: BorderSide(
                              color: Theme.of(context).primaryColor,
-                             width: 2
+                             width: 2,
                          ),
                          borderRadius: BorderRadius.all(Radius.circular(5),
                          ),
@@ -335,7 +343,43 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                ),
 
                  );
-             }
+             },
+             optionsViewBuilder: (BuildContext context,AutocompleteOnSelected<String> onSelected,Iterable<String> options){
+                 return Align(
+                   alignment: Alignment.topCenter,
+                   child: Material(
+                     elevation: 8.0,
+                     child: Container(
+                       height: 300,
+                       child: ListView.separated(
+                           itemBuilder: (BuildContext context,int index){
+                             final String option = options.elementAt(index);
+                             return GestureDetector(
+                               onTap: (){
+                                 onSelected(option);
+                               },
+                               child: ListTile(
+                                 title: Text(option,
+                                 style: TextStyle(
+                                 color: Colors.black
+                                 ),
+                                 ),
+                                 tileColor: Colors.white,
+                               ),
+                             );
+
+                           },
+                           separatorBuilder: (BuildContext context, int index) =>
+                           Divider(
+                             color: Colors.grey,
+                             height: 1,
+                           ),
+                           itemCount: options.length
+                       ),
+                     ),
+                   ),
+                 );
+             },
 
            ),
            SizedBox(height: 16),
@@ -347,7 +391,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
               readOnly: false,
               inputType:  TextInputType.phone,
               onTap:() => null,
-              inputFormater: [LengthLimitingTextInputFormatter(10)],
+              inputFormater: [LengthLimitingTextInputFormatter(10)]
            ),
            SizedBox(height: 16),
 

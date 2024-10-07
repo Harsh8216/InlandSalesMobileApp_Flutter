@@ -17,7 +17,6 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  LocationHelper locationHelper = LocationHelper();
 
   @override
   Widget build(BuildContext context) {

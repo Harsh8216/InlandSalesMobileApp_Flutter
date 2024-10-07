@@ -21,11 +21,13 @@ class Activity_Leave_List extends StatefulWidget{
 
 class _Activity_Leave_ListState extends State<Activity_Leave_List> {
   var arrData = [];
+  var arrLeaveBal = [];
 
   @override
   void initState() {
     super.initState();
     leaveRequestBody();
+    LeaveBalance();
   }
 
   void leaveRequestBody() async{
@@ -54,6 +56,32 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
     }catch(error){
       print(error);
+
+    }
+
+  }
+
+  void LeaveBalance() async{
+    var pref = await SharedPreferences.getInstance();
+    String? strEmpcd = pref.getString(Constant.Empcd);
+
+    final Map<String, String> requestBody = {
+      'Empcd' : "$strEmpcd",
+      'Tokenno' : "${Constant.TokenNo}",
+
+    };
+
+    try{
+      List<dynamic> responseData = await ApiHelper.postRequest(EndPoint.GetEmployee_LeaveBook, requestBody);
+      print(responseData.length);
+
+      setState(() {
+        arrLeaveBal = responseData;
+
+      });
+
+    }catch(e){
+      print("Error fetching leave history: $e");
 
     }
 
@@ -164,268 +192,68 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
-      appBar: AppBar(
-          title: Text("Leave List",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
-
-          backgroundColor: Theme.of(context).primaryColor,
-
-          iconTheme: IconThemeData(
-              color: Theme.of(context).canvasColor
-          )),
-
-      body: arrData.isEmpty ? Center(
-          child: CircularProgressIndicator(
-            color: Color(CustomColor.Corp_Red.value),
-            backgroundColor: Colors.cyan,
-            strokeWidth: 4.0,
-          )) : ListView.builder(
-        itemBuilder: (context, index) {
-        var dataList = arrData[index];
-        String LeaveID = dataList['LeaveID'];
-        IconData statusIcon = getIconForStatus(dataList['Status']);
-        Icon StatusWidget = Icon(statusIcon,color: getColorStatus(dataList['Status']));
-        Color colorStatus = getColorStatus(dataList['Status']);
-
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 340,
-            child: ClipPath(
-              clipper: MiddleRoundCutCliper(),
-              child: Card(
-                color: Theme.of(context).canvasColor,
-                elevation: 8,
-                child: Column(
-                  children: [
-                    ClipPath(
-                      clipper: ZigzagClipper(),
-                      child: Container(
-                        width: double.infinity,
-                        height: 120,
-
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8.0),
-                                topRight: Radius.circular(8.0)
-                            ),
-
-                            color: Theme.of(context).primaryColor
-                        ),
-
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  children: [
-                                    buildMenuShapeChange("From Date",
-                                        Icons.calendar_month,
-                                        dataList['FromDate']),
-              
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 100),
-                                      child: buildMenuShapeChange("To Date",
-                                          Icons.calendar_month,
-                                          dataList['TODate']),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20,left: 10),
-                                child: Row(
-                                  children: [
-                                    Text("No. of Days : "+dataList['Days'],
-                                      style: TextStyle(fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).canvasColor
-                                      )),
-                                    Padding(
-                                        padding: const EdgeInsets.only(left: 80),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.phone,
-                                              color: Theme.of(context).canvasColor,
-                                              size: 20,),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 5),
-                                              child: Text(
-                                                  dataList['EMobNo'],
-                                                  style: TextStyle(fontWeight: FontWeight.bold,
-                                                      fontSize: 14,
-                                                      color: Theme.of(context).canvasColor
-                                                  )),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-              
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-              
-              
-                        ),
-              
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        buildMenu("Leave Apply Date",
-                            Icons.calendar_month,
-                            dataList['EntryDate']),
-
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 90,
-                                top: 10
-                            ),
-
-                            child: Row(
-                              children: [
-                                Icon(StatusWidget.icon),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 5
-                                  ),
-
-                                  child: Text(dataList['Status'],
-                                      style: TextStyle(
-                                          color: colorStatus,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      )),
-                                ),
-                              ],
-                            )
-                        ),
-              
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10
-                      ),
-                      child: buildMenu("Responsible Person",
-                          Icons.account_circle,
-                          dataList['ResPersonEmpnm']),
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: 10
-                          ),
-
-                          child: dataList ['Status'] == 'Pending' ?
-
-                          InkWell(onTap : (){
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext buildContext){
-                              return AlertDialog(
-                                title: Text('Alert',
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w900
-                                  )),
-                                content: Text('Do you really want to delete pending leave',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16
-                                    )),
-
-                                actions: [
-                                  TextButton(onPressed: (){
-                                    LeaveDelete(LeaveID);
-                                    
-                                  },
-                                      child: Text('OK')),
-                                  TextButton(onPressed: (){
-                                    Navigator.of(context).pop();
-
-                                    
-                                  }, child: Text('Cancel'))
-                                ],
-                              );
-
-                            });
-
-                          },
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                                size: 25,
-                              )) : SizedBox.shrink()),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10,
-                          left: 5,
-                          right: 5
-                      ),
-
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey
-                            ),
-
-                            borderRadius: BorderRadius.circular(8.0)
-                        ),
-
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 10
-                          ),
-
-                          child: buildMenuShapeChangeColor("Reason",
-                              Icons.receipt,
-                              dataList['Reason']
-                          ),
-
-                        ),
-              
-                      ),
-                    ),
-
-
-                  ],
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 2,
+      child: Scaffold(
+        endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
+        appBar: AppBar(
+            title: Text("Leave Details",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold)),
+            bottom: TabBar(
+                isScrollable: false,
+                indicatorColor: Theme.of(context).focusColor,
+                indicator: BoxDecoration(
+                  color: Theme.of(context).focusColor,
+                  borderRadius: BorderRadius.circular(20), // Add roundness to the indicator
                 ),
-              ),
-            ),
+                indicatorPadding: EdgeInsets.all(5),
+                labelPadding: EdgeInsets.symmetric(horizontal:20),
+                labelColor: Theme.of(context).canvasColor,
+                unselectedLabelColor: Theme.of(context).primaryColorDark,
+                tabs: [
+                  Tab(
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: Text("Leave History",),
+            )
+                  ),
+                  Tab(
+                      child: Align(
+                        alignment: Alignment.center,
+                          child: Text("Leave Balance")),
+                      )
+
+                ]),
+
+            backgroundColor: Theme.of(context).primaryColor,
+
+            iconTheme: IconThemeData(
+                color: Theme.of(context).canvasColor
+            )),
+
+        body: TabBarView(
+          children: [
+            LeaveHistory(),
+            LeaveBalanceData()
+
+
+          ],
+        ),
+
+        floatingActionButton: FloatingActionButton(onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Apply_for_leaves(onThemeChange: widget.onThemeChange)));
+
+        },
+          backgroundColor: Theme.of(context).focusColor,
+          tooltip: "Apply Leave",
+          child: Icon(
+            Icons.add,
+            size: 30,
+            color: Theme.of(context).canvasColor,
           ),
-        );
-      },
-        itemCount: arrData.length,
-
-      ),
-
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Apply_for_leaves(onThemeChange: widget.onThemeChange)));
-
-      },
-        backgroundColor: Theme.of(context).focusColor,
-        tooltip: "Apply Leave",
-        child: Icon(
-          Icons.add,
-          size: 30,
-          color: Theme.of(context).canvasColor,
         ),
       ),
     );
@@ -572,6 +400,379 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
         )
       ],
     );
+  }
+
+  Widget LeaveBalanceData(){
+    if(arrLeaveBal.isEmpty){
+      return Center(
+          child: CircularProgressIndicator(
+            color: Color(CustomColor.Corp_Red.value),
+            backgroundColor: CustomColor.Corp_Skyblue,
+            strokeWidth: 4.0,
+          ));
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: Card(
+        elevation: 6,
+        color: Theme.of(context).canvasColor,
+
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Month | Year',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 14
+                        )
+                    ),
+
+                    VerticalDivider(
+                      width: 5,
+                      color: Colors.white,
+                      thickness: 1,
+
+                    ),
+                    Text('LeaveBalance',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 14
+                        )
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                  style: BorderStyle.solid,
+                  width: 1
+                )
+              ),
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: arrLeaveBal.length,
+                  itemBuilder: (context,index){
+                    var arrBalData = arrLeaveBal[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text('${arrBalData["Month"]} | ${arrBalData["Year"]}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 14
+                                  )
+                              ),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Container(
+                              height: 30,
+                              width: 1,
+                              color: Colors.black,
+                            ),
+                          ),
+
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text('${arrBalData["LeaveBalance"]}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 14
+                                  )
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }, separatorBuilder: (BuildContext context, int index) =>
+                   Divider(
+                     height: 1,
+                     thickness: 1,
+                     color: Colors.grey,
+                   )
+
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+  }
+
+  Widget LeaveHistory(){
+    if(arrData.isEmpty){
+      return Center(
+            child: CircularProgressIndicator(
+              color: Color(CustomColor.Corp_Red.value),
+              backgroundColor: CustomColor.Corp_Skyblue,
+              strokeWidth: 4.0,
+            ));
+    }
+     return ListView.builder(
+      itemBuilder: (context, index) {
+        var dataList = arrData[index];
+        String LeaveID = dataList['LeaveID'];
+        IconData statusIcon = getIconForStatus(dataList['Status']);
+        Icon StatusWidget = Icon(statusIcon,color: getColorStatus(dataList['Status']));
+        Color colorStatus = getColorStatus(dataList['Status']);
+
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 340,
+            child: ClipPath(
+              clipper: MiddleRoundCutCliper(),
+              child: Card(
+                color: Theme.of(context).canvasColor,
+                elevation: 4,
+                child: Column(
+                  children: [
+                    ClipPath(
+                      clipper: ZigzagClipper(),
+                      child: Container(
+                        width: double.infinity,
+                        height: 120,
+
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8.0),
+                                topRight: Radius.circular(8.0)
+                            ),
+
+                            color: Theme.of(context).primaryColor
+                        ),
+
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Row(
+                                  children: [
+                                    buildMenuShapeChange("From Date",
+                                        Icons.calendar_month,
+                                        dataList['FromDate']),
+
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 100),
+                                      child: buildMenuShapeChange("To Date",
+                                          Icons.calendar_month,
+                                          dataList['TODate']),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20,left: 10),
+                                child: Row(
+                                  children: [
+                                    Text("No. of Days : "+dataList['Days'],
+                                        style: TextStyle(fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context).canvasColor
+                                        )),
+                                    Padding(
+                                        padding: const EdgeInsets.only(left: 80),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.phone,
+                                              color: Theme.of(context).canvasColor,
+                                              size: 20,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 5),
+                                              child: Text(
+                                                  dataList['EMobNo'],
+                                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: Theme.of(context).canvasColor
+                                                  )),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+
+
+                        ),
+
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        buildMenu("Leave Apply Date",
+                            Icons.calendar_month,
+                            dataList['EntryDate']),
+
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: 90,
+                                top: 10
+                            ),
+
+                            child: Row(
+                              children: [
+                                Icon(StatusWidget.icon),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5
+                                  ),
+
+                                  child: Text(dataList['Status'],
+                                      style: TextStyle(
+                                          color: colorStatus,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      )),
+                                ),
+                              ],
+                            )
+                        ),
+
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10
+                      ),
+                      child: buildMenu("Responsible Person",
+                          Icons.account_circle,
+                          dataList['ResPersonEmpnm']),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(
+                                right: 10
+                            ),
+
+                            child: dataList ['Status'] == 'Pending' ?
+
+                            InkWell(onTap : (){
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext buildContext){
+                                    return AlertDialog(
+                                      title: Text('Alert',
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w900
+                                          )),
+                                      content: Text('Do you really want to delete pending leave',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16
+                                          )),
+
+                                      actions: [
+                                        TextButton(onPressed: (){
+                                          LeaveDelete(LeaveID);
+
+                                        },
+                                            child: Text('OK')),
+                                        TextButton(onPressed: (){
+                                          Navigator.of(context).pop();
+
+
+                                        }, child: Text('Cancel'))
+                                      ],
+                                    );
+
+                                  });
+
+                            },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                  size: 25,
+                                )) : SizedBox.shrink()),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10,
+                          left: 5,
+                          right: 5
+                      ),
+
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.grey
+                            ),
+
+                            borderRadius: BorderRadius.circular(8.0)
+                        ),
+
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 10
+                          ),
+
+                          child: buildMenuShapeChangeColor("Reason",
+                              Icons.receipt,
+                              dataList['Reason']
+                          ),
+
+                        ),
+
+                      ),
+                    ),
+
+
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      itemCount: arrData.length,
+
+    );
+
   }
 
 }

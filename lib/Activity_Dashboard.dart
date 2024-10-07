@@ -46,7 +46,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
             children: [
               Container(
                 width: double.maxFinite,
-                height: 320,
+                height: 300,
                 decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                     boxShadow: [
@@ -65,12 +65,30 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 60,top: 50),
-                      child: Text("Welcome",
-                          style: TextStyle(
+                      padding: const EdgeInsets.only(left: 62,top: 45),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: Text("Welcome",
+                                style: TextStyle(
+                                    color: Theme.of(context).canvasColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12
+                                )),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: Icon(
+                              Icons.notifications_active_rounded,
                               color: Theme.of(context).canvasColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12)),
+                              size: 30,
+
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20),

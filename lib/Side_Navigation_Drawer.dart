@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,6 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
   String strUserId = "";
   String strLocation = "";
   String strSelectedLocation = "";
-  LocationHelper locationHelper = LocationHelper();
 
   List<Map<String,String>> hmGetLocation = [];
   List<String> arrGetLocation = [];
@@ -39,7 +37,6 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
   void initState() {
     super.initState();
     sharedPrefData();
-    locationHelper.getLocation(context);
   }
 
   Future<void> saveTheme(String themeName) async {
