@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inland_sales_upgrade/Activity_Bottom_Navigation_Bar.dart';
 import 'package:inland_sales_upgrade/Activity_GetLocation.dart';
@@ -8,14 +6,12 @@ import 'package:inland_sales_upgrade/Color_Combination_Box.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Login_Activity.dart';
 import 'package:inland_sales_upgrade/Network.dart';
-import 'package:inland_sales_upgrade/Utility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:http/http.dart' as http;
 
 class SideNavigationDrawer extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-  SideNavigationDrawer({required this.onThemeChange});
+  const SideNavigationDrawer({super.key, required this.onThemeChange});
 
   @override
   State<SideNavigationDrawer> createState() => _SideNavigationDrawerState();
@@ -75,7 +71,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
             SizedBox(
               height: 220,
               child: UserAccountsDrawerHeader(
-                  accountName: Text('$strEmpName',
+                  accountName: Text(strEmpName,
                       style: TextStyle(
                           color: Theme.of(context).canvasColor,
                           fontSize: 20,
@@ -89,7 +85,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                               fontSize: 16,
                               color: Theme.of(context).canvasColor,
                               fontWeight: FontWeight.bold)),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
                       Text('Location : ${strSelectedLocation.isNotEmpty ? strLocation : strSelectedLocation}',
@@ -121,7 +117,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
             BuildDrawerMenuItems(
                 Icons.edit_location_alt, 'Change Location', () async{
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Get_Location()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Activity_Get_Location()));
 
             }),
 
@@ -145,9 +141,9 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
             }),
 
 
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: const Divider(
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Divider(
                 color: Colors.black12,
                 thickness: 1,
               ),
@@ -171,9 +167,9 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
     await pref.remove("Password");
 
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content: Text('Logged out successfully',
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(fontWeight: FontWeight.bold)),
             duration: Duration(seconds: 3)));
     Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) => LoginPage(onThemeChange: widget.onThemeChange)));
@@ -225,7 +221,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                   color: Theme.of(context).primaryColor,
                 ),),
             ),
-            content: Container(
+            content: SizedBox(
               height: 150,
               child: Center(
                 child: Padding(
@@ -237,7 +233,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          widget.onThemeChange ?.call(ThemeData(
+                          widget.onThemeChange .call(ThemeData(
                               primaryColor: CustomColor.Corp_Skyblue,
                               canvasColor: Colors.white,
                               primaryColorDark: Colors.black,
@@ -249,7 +245,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                           Navigator.pop(context);
 
                         },
-                        child: Column(
+                        child: const Column(
                           children: [
                             Color_Combination_Box(
                               firstColor: CustomColor.Corp_Skyblue,
@@ -262,7 +258,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
                       GestureDetector(
                         onTap: () async {
-                          widget.onThemeChange?.call(ThemeData(
+                          widget.onThemeChange.call(ThemeData(
                               primaryColor: CustomColor.Corp_blue,
                               canvasColor: Colors.white,
                               primaryColorDark: Colors.black,
@@ -274,7 +270,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                           Navigator.pop(context);
 
                         },
-                        child: Column(
+                        child: const Column(
                           children: [
                             Color_Combination_Box(
                               firstColor: CustomColor.Corp_blue,
@@ -287,7 +283,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
                       GestureDetector(
                         onTap: () async {
-                          widget.onThemeChange?.call(ThemeData(
+                          widget.onThemeChange.call(ThemeData(
                               primaryColor: CustomColor.Corp_Red,
                               canvasColor: Colors.white,
                               primaryColorDark: Colors.black,
@@ -299,7 +295,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                           Navigator.pop(context);
 
                         },
-                        child: Column(
+                        child: const Column(
                           children: [
                             Color_Combination_Box(
                               firstColor: CustomColor.Corp_Red,
@@ -312,7 +308,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
                       GestureDetector(
                         onTap: () async{
-                          widget.onThemeChange?.call(ThemeData(
+                          widget.onThemeChange.call(ThemeData(
                               primaryColor: CustomColor.Corp_Red,
                               canvasColor: Colors.white,
                               primaryColorDark: Colors.black,
@@ -325,7 +321,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                           Navigator.pop(context);
 
                         },
-                        child: Column(
+                        child: const Column(
                           children: [
                             Color_Combination_Box(
                               firstColor: CustomColor.Corp_Red,
@@ -338,7 +334,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
                       GestureDetector(
                         onTap: () async{
-                          widget.onThemeChange?.call(ThemeData(
+                          widget.onThemeChange.call(ThemeData(
                               primaryColor: CustomColor.Corp_blue,
                               canvasColor: Colors.white,
                               primaryColorDark: Colors.black,
@@ -351,7 +347,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                           Navigator.pop(context);
 
                         },
-                        child: Column(
+                        child: const Column(
                           children: [
                             Color_Combination_Box(
                               firstColor: CustomColor.Corp_blue,
@@ -364,7 +360,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
                       GestureDetector(
                         onTap: () async{
-                          widget.onThemeChange?.call(ThemeData(
+                          widget.onThemeChange.call(ThemeData(
                               primaryColor: CustomColor.Corp_Skyblue,
                               canvasColor: Colors.white,
                               primaryColorDark: Colors.black,
@@ -377,7 +373,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                           Navigator.pop(context);
 
                         },
-                        child: Column(
+                        child: const Column(
                           children: [
                             Color_Combination_Box(
                               firstColor: CustomColor.Corp_Skyblue,

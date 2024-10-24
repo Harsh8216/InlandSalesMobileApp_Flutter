@@ -5,7 +5,6 @@ class MiddleRoundCutCliper extends CustomClipper<Path>{
   Path getClip(Size size) {
     var path = Path();
     double cutRadius = 15.0;  // Radius of the round cuts
-    double cutOffset = size.width * 0.20; // Offset from the corners to the middle
     double middleHeight = size.height * 0.5; // Position for the middle of the left and right sides
 
     // Start at the top-left corner

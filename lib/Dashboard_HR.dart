@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inland_sales_upgrade/Activity_AppliedLoanList.dart';
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
-import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 
 class Activity_Apply_Leaves extends StatefulWidget {
   final Function(ThemeData) onThemeChange;
-  Activity_Apply_Leaves({required this.onThemeChange});
+  const Activity_Apply_Leaves({super.key, required this.onThemeChange});
 
   @override
   State<StatefulWidget> createState() => ActivityApplyLeaves_State();
@@ -26,7 +25,7 @@ class ActivityApplyLeaves_State extends State<Activity_Apply_Leaves> {
           )),
 
           backgroundColor: Theme.of(context).primaryColor,
-          iconTheme: IconThemeData(
+          iconTheme: const IconThemeData(
               color: Colors.white
           )),
 
@@ -49,7 +48,7 @@ class ActivityApplyLeaves_State extends State<Activity_Apply_Leaves> {
               }),
 
               MenuCardView(Icons.local_atm, "Apply For Loan", () async {
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_AppliedLoanList(onThemeChange: widget.onThemeChange)));
               })
             ],
           ),

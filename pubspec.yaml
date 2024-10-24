@@ -36,7 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  fluttertoast: ^8.2.2
+  fluttertoast: ^8.2.1
   math_expressions: ^2.0.1
   autocomplete_textfield: 2.0.1
   font_awesome_flutter: ^10.7.0
@@ -46,6 +46,7 @@ dependencies:
   package_info_plus: ^4.0.0
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
 
@@ -98,7 +99,7 @@ flutter:
   #         style: italic
     - family: ProtestRiot
       fonts:
-        - asset: assets/fonts/ProtestRiot-Regular.ttf
+       - asset: assets/fonts/ProtestRiot-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

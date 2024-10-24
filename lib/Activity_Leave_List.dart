@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 
 class Activity_Leave_List extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-  Activity_Leave_List({required this.onThemeChange});
+  const Activity_Leave_List({super.key, required this.onThemeChange});
 
   @override
   State<Activity_Leave_List> createState() => _Activity_Leave_ListState();
@@ -36,12 +36,12 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
     final Map<String,String> requestBody ={
       "Empcd": "$strEmpcd",
-      "Tokenno": "${Constant.TokenNo}"
+      "Tokenno": Constant.TokenNo
     };
 
     try{
       final http.Response responseBody = await http.post(
-        Uri.parse("${Constant.baseurl+EndPoint.GetEmployee_LeaveHistory}"),
+        Uri.parse(Constant.baseurl+EndPoint.GetEmployee_LeaveHistory),
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"},
       );
@@ -67,7 +67,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
     final Map<String, String> requestBody = {
       'Empcd' : "$strEmpcd",
-      'Tokenno' : "${Constant.TokenNo}",
+      'Tokenno' : Constant.TokenNo,
 
     };
 
@@ -93,14 +93,14 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
     final Map<String, String> requestBody = {
       'Empcd' : "$strEmpcd",
-      'Tokenno' : "${Constant.TokenNo}",
-      'LeaveID' : "$LeaveId"
+      'Tokenno' : Constant.TokenNo,
+      'LeaveID' : LeaveId
 
     };
 
     try{
       showDialog(context: context, builder: (BuildContext buildContext){
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(
             color: CustomColor.Corp_Red,
             backgroundColor: CustomColor.Corp_Skyblue,
@@ -111,7 +111,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       });
 
       final http.Response JsonDataConvert = await http.post(
-        Uri.parse("${Constant.baseurl+EndPoint.LeaveDelete}"),
+        Uri.parse(Constant.baseurl+EndPoint.LeaveDelete),
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"},
 
@@ -134,14 +134,14 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                 context: context,
                 builder: (BuildContext buildContext){
                   return AlertDialog(
-                    title: Text('Success',style: TextStyle(color: Colors.green,fontSize: 20,fontWeight: FontWeight.w900),),
-                    content: Text(strMsg,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                    title: const Text('Success',style: TextStyle(color: Colors.green,fontSize: 20,fontWeight: FontWeight.w900),),
+                    content: Text(strMsg,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                     actions: [
                       TextButton(onPressed: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Dashboard(onThemeChange: widget.onThemeChange,)));
 
                       },
-                          child: Text('OK'))
+                          child: const Text('OK'))
                     ],
 
                   );
@@ -168,7 +168,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       case  'approved':
         return Colors.green;
       case  'pending':
-        return Color(0xFFCEC123);
+        return const Color(0xFFCEC123);
       case  'reject':
         return Colors.red;
       default :
@@ -198,7 +198,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       child: Scaffold(
         endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
         appBar: AppBar(
-            title: Text("Leave Details",
+            title: const Text("Leave Details",
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold)),
@@ -206,14 +206,14 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                 isScrollable: false,
                 indicatorColor: Theme.of(context).focusColor,
                 indicator: BoxDecoration(
-                  color: Theme.of(context).focusColor,
+                  color: Theme.of(context).primaryColorDark,
                   borderRadius: BorderRadius.circular(20), // Add roundness to the indicator
                 ),
-                indicatorPadding: EdgeInsets.all(5),
-                labelPadding: EdgeInsets.symmetric(horizontal:20),
+                indicatorPadding: const EdgeInsets.all(5),
+                labelPadding: const EdgeInsets.symmetric(horizontal:20),
                 labelColor: Theme.of(context).canvasColor,
                 unselectedLabelColor: Theme.of(context).primaryColorDark,
-                tabs: [
+                tabs: const [
                   Tab(
                       child: Align(
                           alignment: Alignment.center,
@@ -251,7 +251,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
           tooltip: "Apply Leave",
           child: Icon(
             Icons.add,
-            size: 30,
+            size: 25,
             color: Theme.of(context).canvasColor,
           ),
         ),
@@ -264,7 +264,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               top: 10,
               left: 40
           ),
@@ -277,7 +277,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               )),
         ),
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               left: 10
           ),
           child: Row(
@@ -288,7 +288,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                     left: 5
                 ),
 
@@ -312,7 +312,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               left: 10
           ),
 
@@ -325,7 +325,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
         ),
         Padding(
-          padding: EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.only(left: 10),
           child: Row(
             children: [
               Icon(iconData,
@@ -334,7 +334,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                     left: 5
                 ),
 
@@ -358,7 +358,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               left: 10
           ),
 
@@ -371,7 +371,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
 
         ),
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               left: 10
           ),
 
@@ -383,7 +383,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                     left: 5
                 ),
 
@@ -424,11 +424,11 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               height: 40,
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
 
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 25),
+              child: const Padding(
+                padding: EdgeInsets.only(left: 25),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -446,7 +446,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                       thickness: 1,
 
                     ),
-                    Text('LeaveBalance',
+                    Text('Leave Balance',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -468,7 +468,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
               ),
               child: ListView.separated(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: arrLeaveBal.length,
                   itemBuilder: (context,index){
                     var arrBalData = arrLeaveBal[index];
@@ -482,7 +482,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                             child: Container(
                               alignment: Alignment.center,
                               child: Text('${arrBalData["Month"]} | ${arrBalData["Year"]}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                       fontSize: 14
@@ -504,7 +504,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                             child: Container(
                               alignment: Alignment.center,
                               child: Text('${arrBalData["LeaveBalance"]}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                       fontSize: 14
@@ -516,7 +516,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                       ),
                     );
                   }, separatorBuilder: (BuildContext context, int index) =>
-                   Divider(
+                   const Divider(
                      height: 1,
                      thickness: 1,
                      color: Colors.grey,
@@ -567,7 +567,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                         height: 120,
 
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(8.0),
                                 topRight: Radius.circular(8.0)
                             ),
@@ -683,7 +683,7 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 right: 10
                             ),
 
@@ -694,13 +694,13 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                                   context: context,
                                   builder: (BuildContext buildContext){
                                     return AlertDialog(
-                                      title: Text('Alert',
+                                      title: const Text('Alert',
                                           style: TextStyle(
                                               color: Colors.red,
                                               fontSize: 22,
                                               fontWeight: FontWeight.w900
                                           )),
-                                      content: Text('Do you really want to delete pending leave',
+                                      content: const Text('Do you really want to delete pending leave',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16
@@ -711,23 +711,23 @@ class _Activity_Leave_ListState extends State<Activity_Leave_List> {
                                           LeaveDelete(LeaveID);
 
                                         },
-                                            child: Text('OK')),
+                                            child: const Text('OK')),
                                         TextButton(onPressed: (){
                                           Navigator.of(context).pop();
 
 
-                                        }, child: Text('Cancel'))
+                                        }, child: const Text('Cancel'))
                                       ],
                                     );
 
                                   });
 
                             },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.delete,
                                   color: Colors.red,
                                   size: 25,
-                                )) : SizedBox.shrink()),
+                                )) : const SizedBox.shrink()),
                       ],
                     ),
                     Padding(

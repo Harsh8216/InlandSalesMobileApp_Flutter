@@ -6,7 +6,7 @@ import 'Activity_Bottom_Navigation_Bar.dart';
 
 class SplashScreen extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-  SplashScreen({required this.onThemeChange});
+  const SplashScreen({super.key, required this.onThemeChange});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     isLogedIn();
     _controller = AnimationController(
         vsync: this,
-        duration: Duration(seconds: 2));
+        duration: const Duration(seconds: 2));
 
     _animation = Tween<double> (begin: 0.0,end: 1.0).animate(_controller);
     _controller.forward();
@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     SharedPreferences pref = await SharedPreferences.getInstance();
     String ? UserId = pref.getString("user_id");
 
-    Timer(Duration(seconds: 3),(){
+    Timer(const Duration(seconds: 3),(){
       if(UserId != null) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar(onThemeChange: widget.onThemeChange)));
       }else{

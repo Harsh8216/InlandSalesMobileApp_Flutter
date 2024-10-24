@@ -4,14 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Activity_Bottom_Navigation_Bar.dart';
-import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
 import 'package:inland_sales_upgrade/Network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-  LoginPage({required this.onThemeChange});
+  const LoginPage({super.key, required this.onThemeChange});
 
   @override
   _LoginPage createState() =>  _LoginPage();
@@ -35,7 +34,7 @@ class _LoginPage extends State<LoginPage>{
 
     try{
       showDialog(context: context, barrierDismissible: false, builder: (BuildContext context){
-        return Center(
+        return const Center(
             child: CircularProgressIndicator(
               color: CustomColor.Corp_Red,
               backgroundColor: CustomColor.Corp_Skyblue,
@@ -44,7 +43,7 @@ class _LoginPage extends State<LoginPage>{
       },
       );
       final http.Response response = await http.post(
-          Uri.parse("${Constant.baseurl+EndPoint.EmployeeLogin}"),
+          Uri.parse(Constant.baseurl+EndPoint.EmployeeLogin),
           body: jsonEncode(requestBody),
           headers: {"Content-Type": "application/json"}
       );
@@ -53,7 +52,7 @@ class _LoginPage extends State<LoginPage>{
       final Map<String,dynamic> responseData = jsonDecode(response.body);
       print(responseData.length);
 
-      final _statusCode = int.parse(responseData['Status']);
+      final statusCode = int.parse(responseData['Status']);
       _Branch_Address = responseData['Branch_Address'];
       _Name = responseData['Name'];
       _Empcd = responseData['Empcd'];
@@ -69,7 +68,7 @@ class _LoginPage extends State<LoginPage>{
       strEmpcd = requestBody['Empcd'];
       strPassword = requestBody['Password'];
 
-      if(_statusCode == 5001){
+      if(statusCode == 5001){
         Navigator.pop(context);
         Fluttertoast.showToast(msg: 'Please Check your UserID and Password',toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.CENTER,
             backgroundColor: Colors.red,textColor: Colors.white);
@@ -113,7 +112,7 @@ class _LoginPage extends State<LoginPage>{
     }
   }
 
-  Future<void> saveID_PW(Map<String,String> _userData) async{
+  Future<void> saveID_PW(Map<String,String> userData) async{
     try{
       SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setString('user_id', strEmpcd);
@@ -128,7 +127,7 @@ class _LoginPage extends State<LoginPage>{
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Stack(
               children: [
@@ -140,11 +139,11 @@ class _LoginPage extends State<LoginPage>{
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 5,
-                          offset: Offset(0,5),
+                          offset: const Offset(0,5),
                           color: Colors.black.withOpacity(0.5),
                         ),
                       ],
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(100),
                           bottomRight: Radius.circular(100))
                   ),
@@ -159,20 +158,20 @@ class _LoginPage extends State<LoginPage>{
                         boxShadow: [
                           BoxShadow(
                               blurRadius: 85,
-                              offset: Offset(0, 8),
+                              offset: const Offset(0, 8),
                               color: Colors.black.withOpacity(0.5)
                           )
                         ],
-                        borderRadius: BorderRadius.all(Radius.circular(20))
+                        borderRadius: const BorderRadius.all(Radius.circular(20))
 
                     ),
-                    child: Container(
+                    child: SizedBox(
                       height: 300,
                       width: 500,
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: AnimatedContainer(
-                          duration: Duration(seconds: 2),
+                          duration: const Duration(seconds: 2),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -192,20 +191,20 @@ class _LoginPage extends State<LoginPage>{
                                     inputFormatters: [LengthLimitingTextInputFormatter(5)],
                                     keyboardType: TextInputType.number,
                                     decoration:  InputDecoration(
-                                        prefixIcon: Icon(
+                                        prefixIcon: const Icon(
                                             Icons.account_circle
                                         ),
                                         labelText: "User ID",
-                                        labelStyle: TextStyle(
+                                        labelStyle: const TextStyle(
                                             fontWeight: FontWeight.bold
                                         ),
                                         border: OutlineInputBorder(
                                             borderSide: BorderSide(style: BorderStyle.solid,width: 2,color: Color(CustomColor.Corp_blue.value)),
-                                            borderRadius: BorderRadius.all(Radius.circular(5)))),
+                                            borderRadius: const BorderRadius.all(Radius.circular(5)))),
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 15),
+                              const SizedBox(height: 15),
 
                               Padding(
                                 padding: const EdgeInsets.only(left: 10,right: 10),
@@ -214,7 +213,7 @@ class _LoginPage extends State<LoginPage>{
                                   child: TextFormField(controller: PassWordController,
                                     obscureText: true,
                                     //errorText: _validateUserId ? "Enter Valid User ID" : null,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       border: OutlineInputBorder(
                                           borderRadius: BorderRadius.all(Radius.circular(5))),
                                       prefixIcon: Icon(
@@ -241,9 +240,9 @@ class _LoginPage extends State<LoginPage>{
                                       },
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: Color(CustomColor.Corp_Red.value),
-                                          textStyle: TextStyle(fontWeight: FontWeight.bold)
+                                          textStyle: const TextStyle(fontWeight: FontWeight.bold)
                                       ),
-                                      child: Text("LOGIN",style: TextStyle(color: Colors.white,fontSize: 16))
+                                      child: const Text("LOGIN",style: TextStyle(color: Colors.white,fontSize: 16))
                                   ),
                                 ),
                               ),
@@ -275,7 +274,7 @@ class _LoginPage extends State<LoginPage>{
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         fontSize: 16,
-        backgroundColor: Color(0xFFC00018),
+        backgroundColor: const Color(0xFFC00018),
         textColor: Colors.white);
   }
 
@@ -291,7 +290,7 @@ class _LoginPage extends State<LoginPage>{
             color: Colors.black.withOpacity(0.8),
           ),
         ],
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(80),
           topRight: Radius.circular(80),
         ),

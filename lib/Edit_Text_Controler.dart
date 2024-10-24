@@ -9,7 +9,7 @@ class EditTextField extends StatefulWidget {
   final bool readOnly;
   final List<TextInputFormatter> ? inputFormater;
 
-  EditTextField({
+  const EditTextField({super.key, 
     required this.controller,
     required this.inputType,
     required this.lable,
@@ -59,9 +59,9 @@ class _EditTextFieldState extends State<EditTextField> {
               fontWeight: FontWeight.bold,
               color: isFocusNode ? Theme.of(context).primaryColor : Colors.grey,
           ),
-          contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10,horizontal: 12),
 
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
               borderSide: BorderSide(
                 style: BorderStyle.solid,
                 width: 2,
@@ -69,7 +69,7 @@ class _EditTextFieldState extends State<EditTextField> {
               borderRadius: BorderRadius.all(Radius.circular(5))
           ),
 
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
                   style: BorderStyle.solid,
                   width: 1,
@@ -83,7 +83,7 @@ class _EditTextFieldState extends State<EditTextField> {
               color: Theme.of(context).primaryColor,
               width: 2
             ),
-            borderRadius: BorderRadius.all(Radius.circular(5),
+            borderRadius: const BorderRadius.all(Radius.circular(5),
             ),
 
       ),

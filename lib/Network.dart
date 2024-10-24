@@ -25,5 +25,10 @@ class EndPoint{
   static const String LeaveDelete = "/LeaveDelete";
   static const String GetLocation = "/GetLocation";
   static const String GetEmployee_LeaveBook = "/GetEmployee_LeaveBook";
+  static const String GetLoanDetails = "/LoanDetails";
+  static const String GetLoanTransactionDetails = "/LoanTransactionDetails";
+  static const String GetLoanTransaction= "/LoanTransaction";
+  static const String GetLoaneligible = "/GetLoaneligible";
+  static const String GetLoanApply = "/LoanApply";
 
 }

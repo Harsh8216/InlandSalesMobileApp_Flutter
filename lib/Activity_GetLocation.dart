@@ -1,15 +1,13 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Network.dart';
-import 'package:inland_sales_upgrade/Utility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Activity_Get_Location extends StatefulWidget{
   static final GlobalKey<Activity_Get_Location_State> locationKey = GlobalKey<Activity_Get_Location_State>();
+
+  const Activity_Get_Location({super.key});
   @override
   State<StatefulWidget> createState() => Activity_Get_Location_State();
 
@@ -59,9 +57,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
       strBranchLat = _strBranchLat;
       strBranchLong = _strBranchLong;
       strBranchRadius = _strBranchRadius;
-      
-    });
 
+    });
   }
 
 
@@ -71,13 +68,13 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
 
     final Map<String,String> RequestBody = {
       'empcd' : '$strEmpcd',
-      'Tokenno' : '${Constant.TokenNo}'
+      'Tokenno' : Constant.TokenNo
 
     };
 
     try{
       final http.Response response = await http.post(
-        Uri.parse("${Constant.baseurl + EndPoint.GetLocation}"),
+        Uri.parse(Constant.baseurl + EndPoint.GetLocation),
         body: jsonEncode(RequestBody),
         headers: {"Content-Type": "application/json"}
 
@@ -116,7 +113,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Get Location",
+          title: const Text("Get Location",
               style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold)),
@@ -185,7 +182,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                             color: focusNode.hasFocus ? Theme.of(context).primaryColor : Colors.grey
                         ),
         
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 2,
                                 style: BorderStyle.solid,
@@ -199,7 +196,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                 style: BorderStyle.solid,
                                 color: Theme.of(context).primaryColor
                             ),
-                            borderRadius: BorderRadius.all(Radius.circular(5))
+                            borderRadius: const BorderRadius.all(Radius.circular(5))
                         )
         
                     ),
@@ -211,7 +208,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                     alignment: Alignment.topLeft,
                     child: Material(
                       elevation: 8.0,
-                      child: Container(
+                      child: SizedBox(
                         height: 300,
                         child: ListView.separated(
                             itemCount: options.length,
@@ -223,7 +220,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                 },
                                 child: ListTile(
                                   title: Text(option,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                     color: Colors.black
                                   ),
                                   ),
@@ -235,7 +232,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
         
         
                             }, separatorBuilder: (BuildContext context, int index) =>
-                            Divider(
+                            const Divider(
                               color: Colors.grey,
                               height: 1,
         
@@ -268,7 +265,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("${strEmpName}",
+                                  Text(strEmpName,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 16,
@@ -282,8 +279,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                           ),
                           Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10),
                                 child: Text("Employee Code : ",
                                   style: TextStyle(
                                     fontSize: 14,
@@ -294,7 +291,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 15),
-                                child: Text("$strEmpCode",
+                                child: Text(strEmpCode,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
@@ -308,8 +305,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                             padding: const EdgeInsets.only(top: 10),
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Text("Branch Location : ",
                                     style: TextStyle(
                                       fontSize: 14,
@@ -319,7 +316,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("$strBranchLocation",
+                                  child: Text(strBranchLocation,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -335,8 +332,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                             padding: const EdgeInsets.only(top: 10),
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Text("Branch LatLong : ",
                                     style: TextStyle(
                                       fontSize: 14,
@@ -349,7 +346,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Row(
                                     children: [
-                                      Text("$strBranchLat",
+                                      Text(strBranchLat,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -357,13 +354,13 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                         ),
         
                                       ),
-                                      Text('/',
+                                      const Text('/',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,
                                         ),),
         
-                                      Text("$strBranchLong",
+                                      Text(strBranchLong,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -382,8 +379,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                             padding: const EdgeInsets.only(top: 10),
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Text("Branch Radius : ",
                                     style: TextStyle(
                                       fontSize: 14,
@@ -422,8 +419,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 10),
                                       child: Text("Branch Address : ",
                                         style: TextStyle(
                                           fontSize: 10,
@@ -434,7 +431,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 5),
-                                      child: Text("$strBranchAddress",
+                                      child: Text(strBranchAddress,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -452,8 +449,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                             padding: const EdgeInsets.only(top: 10,bottom: 10),
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Icon(
                                     Icons.my_location,
                                     color: Colors.red,
@@ -461,8 +458,8 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                   ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 20),
-                                  child: Text("${strPrefLocation .isNotEmpty ? strPrefLocation : 'No Location Selected'}",
-                                    style: TextStyle(
+                                  child: Text(strPrefLocation .isNotEmpty ? strPrefLocation : 'No Location Selected',
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w900,
                                         color: Colors.green,
                                         fontSize: 14

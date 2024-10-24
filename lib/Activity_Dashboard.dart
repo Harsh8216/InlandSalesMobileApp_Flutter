@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inland_sales_upgrade/Dashboard_HR.dart';
@@ -7,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Activity_Dashboard extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-  Activity_Dashboard({required this.onThemeChange});
+  const Activity_Dashboard({super.key, required this.onThemeChange});
 
   @override
   State<Activity_Dashboard> createState() => _Activity_DashboardState();
@@ -25,10 +24,10 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
   Future<void> getSharedPreferenceData() async{
     try{
       var pref = await SharedPreferences.getInstance();
-      String _name = pref.getString(Constant.Name) ?? "";
+      String name = pref.getString(Constant.Name) ?? "";
 
       setState(() {
-        _Name = _name;
+        _Name = name;
 
       });
 
@@ -52,11 +51,11 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                     boxShadow: [
                       BoxShadow(
                           blurRadius: 4,
-                          offset: Offset(0,5),
+                          offset: const Offset(0,5),
                           color: Colors.black.withOpacity(0.5)
                       )
                     ],
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(100),
                         bottomRight: Radius.circular(100)
                     )
@@ -127,13 +126,13 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
               ),
 
               Padding(
-                padding:  EdgeInsets.only(top: 170),
+                padding:  const EdgeInsets.only(top: 170),
                 child: Container(
                   width: double.maxFinite,
                   height: MediaQuery.of(context).size.height,
                   color: Colors.transparent,
                   child: GridView.count(crossAxisCount: 2,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     children: [
@@ -159,8 +158,8 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         ShowToast("Finance");
 
                       }),
-                      buildCard(Icons.class_outlined, "Utility",() {
-                        ShowToast("Utility");
+                      buildCard(Icons.class_outlined, "My Customer",() {
+                        ShowToast("My Customer");
 
                       }),
                     ],

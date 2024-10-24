@@ -33,13 +33,13 @@ class Utility{
       builder: (BuildContext context){
     return AlertDialog(
       title: Text(label,
-         style: TextStyle(
+         style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18
           )
       ),
       content: Text(strMsg,
-        style: TextStyle(
+        style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14
         )),
@@ -47,7 +47,7 @@ class Utility{
       actions: [
         TextButton(onPressed: (){
           onOkPress();
-        }, child: Text('OK'))
+        }, child: const Text('OK'))
       ],
       
 
@@ -74,7 +74,7 @@ class ApiHelper {
       }
     } catch (error) {
       print("Error occurred: $error");
-      throw error; // Rethrow the error to handle it at the caller side
+      rethrow; // Rethrow the error to handle it at the caller side
     }
   }
 }

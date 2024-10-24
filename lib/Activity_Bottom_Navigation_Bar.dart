@@ -3,11 +3,10 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:inland_sales_upgrade/Activity_Dashboard.dart';
 import 'package:inland_sales_upgrade/Activity_GetLocation.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
-import 'package:inland_sales_upgrade/Utility.dart';
 
 class BottomNavBar extends StatefulWidget {
   final Function(ThemeData) onThemeChange;  // Add this to receive the callback
-  BottomNavBar({required this.onThemeChange});  // Adjust the constructor
+  const BottomNavBar({super.key, required this.onThemeChange});  // Adjust the constructor
 
 
   @override
@@ -24,7 +23,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       bottomNavigationBar: CurvedNavigationBar(
-        animationDuration: Duration(milliseconds: 300),
+        animationDuration: const Duration(milliseconds: 300),
         animationCurve: Curves.fastEaseInToSlowEaseOut,
         height: 60,
         buttonBackgroundColor: Theme.of(context).primaryColor,
@@ -48,8 +47,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         onTap: (index){
           if(index == 2){
             _scaffoldKey.currentState?.openEndDrawer();
-          }else
-          setState(() {
+          }else {
+            setState(() {
             _selectedIndex = index;
             /*if(index == 1){
               locationHelper.LocationAlertDialog(context);
@@ -57,12 +56,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
             }*/
 
           });
+          }
         },
         backgroundColor: Colors.white,
       ),
       body: _selectedIndex == 0 ?
       Activity_Dashboard(onThemeChange: widget.onThemeChange)
-      : Activity_Get_Location(),
+      : const Activity_Get_Location(),
       endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
 
     );

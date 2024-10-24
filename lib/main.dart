@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ValueNotifier<ThemeData> _themeNotifier = ValueNotifier(ThemeData.light());
+  final ValueNotifier<ThemeData> _themeNotifier = ValueNotifier(ThemeData.light());
 
   @override
   void initState() {

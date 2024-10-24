@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Color_Combination_Box extends StatelessWidget{
@@ -7,7 +6,7 @@ class Color_Combination_Box extends StatelessWidget{
   final bool isHorizontal;
 
 
-  Color_Combination_Box({
+  const Color_Combination_Box({super.key, 
       required this.firstColor,
       required this.secondColor,
       this.isHorizontal = true

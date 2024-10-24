@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Apply_for_leaves extends StatefulWidget {
   final Function(ThemeData) onThemeChange;
-  Apply_for_leaves({required this.onThemeChange});
+  const Apply_for_leaves({super.key, required this.onThemeChange});
 
   @override
   State<Apply_for_leaves> createState() => ApplyForLeavesStates();
@@ -51,12 +51,12 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
 
   final Map<String, String> requestBody = {
   'Empcd': "$strEmpcd",
-  'Tokenno': "${Constant.TokenNo}"
+  'Tokenno': Constant.TokenNo
   };
 
   try {
     final http.Response responseBody = await http.post(
-        Uri.parse("${Constant.baseurl + EndPoint.GetEmployee_ResponsiblePerson}"),
+        Uri.parse(Constant.baseurl + EndPoint.GetEmployee_ResponsiblePerson),
         body: json.encode(requestBody),
         headers: {"Content-Type": "application/json"}
     );
@@ -124,7 +124,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
     String ? strEmpcd = pref.getString(Constant.Empcd);
     final Map<String,String> requestBody = {
       'Empcd' : "$strEmpcd",
-      'Tokenno' : "${Constant.TokenNo}",
+      'Tokenno' : Constant.TokenNo,
       'FromDate' : FromDateController.text,
       'TODate' : ToDateController.text,
       'ResPersonEmpcd' : ResposiblePersonController.text,
@@ -140,7 +140,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
           barrierDismissible: false,
           builder: (BuildContext contact){
 
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(
                   color: CustomColor.Corp_Red,
                   backgroundColor: CustomColor.Corp_Skyblue,
@@ -151,7 +151,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
       );
 
       final http.Response responseBody = await http.post(
-        Uri.parse("${Constant.baseurl + EndPoint.LeaveApply}"),
+        Uri.parse(Constant.baseurl + EndPoint.LeaveApply),
         body: jsonEncode(requestBody),
         headers: {"Content-Type": "application/json"}
       );
@@ -179,13 +179,13 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
               barrierDismissible: false,
               builder: (BuildContext contact) {
                 return AlertDialog(
-                  title: Text("Success",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w900,fontSize: 18)),
-                  content: Text(strMsg,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
+                  title: const Text("Success",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w900,fontSize: 18)),
+                  content: Text(strMsg,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
                   actions: <Widget>[
                     TextButton(onPressed: () {
                       //Navigator.of(context).pop();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List(onThemeChange: widget.onThemeChange)));
-                    }, child: Text("OK"))
+                    }, child: const Text("OK"))
 
                   ],
                 );
@@ -198,13 +198,13 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
               barrierDismissible: false,
               builder: (BuildContext contact) {
                 return AlertDialog(
-                  title: Text("Alert",style: TextStyle(color: Colors.red,fontWeight: FontWeight.w900,fontSize: 18)),
-                  content: Text(strMsg,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
+                  title: const Text("Alert",style: TextStyle(color: Colors.red,fontWeight: FontWeight.w900,fontSize: 18)),
+                  content: Text(strMsg,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
                   actions: <Widget>[
                     TextButton(onPressed: () {
                       //Navigator.of(context).pop();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Leave_List(onThemeChange: widget.onThemeChange,)));
-                    }, child: Text("OK"))
+                    }, child: const Text("OK"))
 
                   ],
                 );
@@ -234,7 +234,8 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
              color: Theme.of(context).canvasColor,
              fontWeight: FontWeight.bold,
              fontSize: 18
-         )),
+         )
+     ),
 
          backgroundColor: Theme.of(context).primaryColor,
          iconTheme: IconThemeData(
@@ -273,7 +274,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                    )),
              ],
            ),
-           SizedBox(height: 16),
+           const SizedBox(height: 16),
 
 
            Autocomplete<String>(
@@ -313,7 +314,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                            fontWeight: FontWeight.bold,
                            color: focusNode.hasFocus ? Theme.of(context).primaryColor : Colors.grey
                        ),
-                     border: OutlineInputBorder(
+                     border: const OutlineInputBorder(
                        borderSide: BorderSide(
                          style: BorderStyle.solid,
                          width: 2,
@@ -321,7 +322,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                        )
 
                      ),
-                       enabledBorder: OutlineInputBorder(
+                       enabledBorder: const OutlineInputBorder(
                            borderSide: BorderSide(
                              style: BorderStyle.solid,
                              width: 1,
@@ -335,7 +336,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                              color: Theme.of(context).primaryColor,
                              width: 2,
                          ),
-                         borderRadius: BorderRadius.all(Radius.circular(5),
+                         borderRadius: const BorderRadius.all(Radius.circular(5),
                          ),
 
                        ),
@@ -349,7 +350,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                    alignment: Alignment.topCenter,
                    child: Material(
                      elevation: 8.0,
-                     child: Container(
+                     child: SizedBox(
                        height: 300,
                        child: ListView.separated(
                            itemBuilder: (BuildContext context,int index){
@@ -360,7 +361,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                                },
                                child: ListTile(
                                  title: Text(option,
-                                 style: TextStyle(
+                                 style: const TextStyle(
                                  color: Colors.black
                                  ),
                                  ),
@@ -370,7 +371,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
 
                            },
                            separatorBuilder: (BuildContext context, int index) =>
-                           Divider(
+                           const Divider(
                              color: Colors.grey,
                              height: 1,
                            ),
@@ -382,7 +383,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
              },
 
            ),
-           SizedBox(height: 16),
+           const SizedBox(height: 16),
 
            
            EditTextField(
@@ -390,19 +391,19 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
               lable:  "Contact No",
               readOnly: false,
               inputType:  TextInputType.phone,
-              onTap:() => null,
+              onTap:() {},
               inputFormater: [LengthLimitingTextInputFormatter(10)]
            ),
-           SizedBox(height: 16),
+           const SizedBox(height: 16),
 
            EditTextField(
               controller:  ReasonController,
               lable:  "Reason",
               inputType:  TextInputType.multiline,
-              onTap:() => null,
+              onTap:() {},
               readOnly: false,
            ),
-           SizedBox(height: 50),
+           const SizedBox(height: 50),
            
            ElevatedButton(onPressed: (){
              LeaveRequestFetchData();
@@ -414,7 +415,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
 
              ),
-               child: Text('SUBMIT',
+               child: const Text('SUBMIT',
                  style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold)
                ),
            )
