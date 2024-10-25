@@ -4,8 +4,8 @@ class ZigzagClipper extends CustomClipper<Path>{
   @override
   Path getClip(Size size) {
     var path = Path();
-    double step = 10.0;
-    double zigzagHeight = 5.0;
+    double step = 6.0;
+    double zigzagHeight = 3.0;
     path.moveTo(0, 0);
 
     for(double i = 0; i< size.width; i+= step){

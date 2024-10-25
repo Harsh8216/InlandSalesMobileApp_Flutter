@@ -9,7 +9,10 @@ import 'Custom_Color_file.dart';
 
 class Activity_AppliedLoanList extends StatefulWidget{
   final Function(ThemeData) onThemeChange;
-  const Activity_AppliedLoanList({super.key, required this.onThemeChange});
+  const Activity_AppliedLoanList({
+    super.key,
+    required this.onThemeChange
+  });
   
   @override
   State<StatefulWidget> createState() => State_AppliedLoanList();
@@ -33,12 +36,13 @@ class State_AppliedLoanList extends State<Activity_AppliedLoanList>{
     var pref = await SharedPreferences.getInstance();
     String? strEmployeeId = pref.getString(Constant.Empcd);
 
+    try{
+
     final Map<String,String> requestBody = {
       'Empcd' : "$strEmployeeId",
       'Tokenno' : "2.5"
     };
 
-    try{
       List<dynamic> responseData  = await ApiHelper.postRequest(EndPoint.GetLoanDetails, requestBody);
       print(responseData.length);
 
@@ -57,12 +61,12 @@ class State_AppliedLoanList extends State<Activity_AppliedLoanList>{
     var pref = await SharedPreferences.getInstance();
     String? strEmployeeId = pref.getString(Constant.Empcd);
 
+  try{
    final Map<String,String> requestBody ={
      "Empcd" : "$strEmployeeId",
      "Tokenno" : "2.5"
    };
 
-   try{
      List<dynamic> ResponseData = await ApiHelper.postRequest(EndPoint.GetLoanTransaction, requestBody);
 
      setState(() {
@@ -71,7 +75,6 @@ class State_AppliedLoanList extends State<Activity_AppliedLoanList>{
 
    }catch(e){
      print(e);
-     Utility().ShowToast("$e");
 
    }
   }
@@ -637,7 +640,13 @@ class State_AppliedLoanList extends State<Activity_AppliedLoanList>{
 
                 InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (Context) => Activity_LoanTrxDetails()));
+                    Navigator.push(context,
+                        MaterialPageRoute(
+                            builder: (Context) => Activity_LoanTrxDetails(
+                              onThemeChange: widget.onThemeChange,
+                              strLoadId: strLoanId,
+
+                            )));
 
                   },
                   child: Padding(
