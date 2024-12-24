@@ -20,7 +20,8 @@ class LoginPage extends StatefulWidget{
 class _LoginPage extends State<LoginPage>{
   var UserIdController = TextEditingController();
   var PassWordController = TextEditingController();
-  var _Branch_Address,_Name,_Empcd,_Branch_Lat,_Branch_Long,_Branch_Radious,_CurrBrcd,_IsFinance,_IsSalesMan,_LAST_PWDUPDT,_PwdDays,strEmpcd,strPassword;
+  var _Branch_Address,_Name,_Empcd,_Branch_Lat,_Branch_Long,_Branch_Radious,
+      _CurrBrcd,_IsFinance,_IsSalesMan,_LAST_PWDUPDT,_PwdDays,strEmpcd,strPassword,_Locationname,_Regioncode,_AcclocName,_Accloccode,_UserImage;
 
   void _login() async {
     final Map<String,String> requestBody = {
@@ -64,6 +65,11 @@ class _LoginPage extends State<LoginPage>{
       _IsSalesMan = responseData['IsSalesMan'];
       _LAST_PWDUPDT = responseData['LAST_PWDUPDT'];
       _PwdDays = responseData['PwdDays'];
+      _Accloccode = responseData['Accloccode'];
+      _AcclocName = responseData['AcclocName'];
+      _Locationname = responseData['Locationname'];
+      _UserImage = responseData['UserImage'];
+      _Regioncode = responseData['Regioncode'];
 
       strEmpcd = requestBody['Empcd'];
       strPassword = requestBody['Password'];
@@ -106,6 +112,11 @@ class _LoginPage extends State<LoginPage>{
       await pref.setString(Constant.IsSalesMan, _IsSalesMan);
       await pref.setString(Constant.LAST_PWDUPDT, _LAST_PWDUPDT);
       await pref.setString(Constant.PwdDays, _PwdDays);
+      await pref.setString(Constant.Accloccode, _Accloccode);
+      await pref.setString(Constant.AcclocName, _AcclocName);
+      await pref.setString(Constant.Locationname, _Locationname);
+      await pref.setString(Constant.UserImage, _UserImage);
+      await pref.setString(Constant.Regioncode, _Regioncode);
 
     }catch(error){
 

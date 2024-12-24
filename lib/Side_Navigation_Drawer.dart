@@ -23,6 +23,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
   String strUserId = "";
   String strLocation = "";
   String strSelectedLocation = "";
+  var UserImage = '';
 
   List<Map<String,String>> hmGetLocation = [];
   List<String> arrGetLocation = [];
@@ -48,6 +49,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
       var _UserId = pref.getString(Constant.Empcd) ?? '';
       var _Location = pref.getString(Constant.CurrBrcd) ?? '';
       var _strSelectedLocation = pref.getString(Constant.Selected_Location) ?? 'No Location Selected';
+      var imageURL = pref.getString(Constant.UserImage) ?? "";
 
 
       setState(() {
@@ -55,6 +57,8 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
         strUserId = _UserId;
         strLocation = _Location;
         strSelectedLocation = _strSelectedLocation;
+        UserImage = imageURL;
+        
       });
     } catch (error) {
       print(error);
@@ -97,13 +101,15 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                   ),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
-                    child: Text(strEmpName.isNotEmpty
-                        ? strEmpName[0].toUpperCase()
-                        : 'N/A',
+
+                    child: UserImage == null || UserImage.isEmpty
+                        ? Text(strEmpName.isNotEmpty ? strEmpName[0].toUpperCase() : 'N/A',
                         style: TextStyle(
                             fontSize: 30.0,
                             color: Theme.of(context).primaryColor
-                        )),
+              )): null,
+                 backgroundImage: UserImage != null && UserImage.isNotEmpty
+                  ? NetworkImage(UserImage) : null
                   ),
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor

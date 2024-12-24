@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:inland_sales_upgrade/DashBoard_My_Activity.dart';
 import 'package:inland_sales_upgrade/Dashboard_HR.dart';
 import 'package:inland_sales_upgrade/Network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ class Activity_Dashboard extends StatefulWidget{
 
 class _Activity_DashboardState extends State<Activity_Dashboard> {
   String _Name = '';
+  var UserImage = '';
 
   @override
   void initState() {
@@ -25,9 +27,11 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
     try{
       var pref = await SharedPreferences.getInstance();
       String name = pref.getString(Constant.Name) ?? "";
+      String imageURL = pref.getString(Constant.UserImage) ?? "";
 
       setState(() {
         _Name = name;
+        UserImage = imageURL;
 
       });
 
@@ -64,7 +68,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 62,top: 45),
+                      padding: const EdgeInsets.only(left: 70,top: 45),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -93,12 +97,17 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.account_circle,
-                            color: Theme.of(context).canvasColor,
-                            size: 35,),
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(UserImage),
+                            onBackgroundImageError: (_,__){
+                              debugPrint("Failed to load profile image.");
+
+                            },
+                            backgroundColor: Colors.grey.shade200,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 6),
+                            padding: const EdgeInsets.only(left: 10),
                             child: Text(_Name,
                                 style: TextStyle(
                                     color: Theme.of(context).canvasColor,
@@ -137,8 +146,7 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                     crossAxisSpacing: 10,
                     children: [
                       buildCard(Icons.cases_rounded, "My Activity",(){
-                        ShowToast("My Activity");
-                        //Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppInland()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => DashBoard_My_Activity(onThemeChange: widget.onThemeChange)));
                       }),
 
                       buildCard(Icons.account_circle, "My HR",() async{
@@ -150,18 +158,22 @@ class _Activity_DashboardState extends State<Activity_Dashboard> {
                         ShowToast("Attendance");
 
                       }),
+
                       buildCard(Icons.note_alt, "Request",(){
                         ShowToast("Report");
 
                       }),
+
                       buildCard(Icons.currency_rupee, "Finance",(){
                         ShowToast("Finance");
 
                       }),
+
                       buildCard(Icons.class_outlined, "My Customer",() {
                         ShowToast("My Customer");
 
                       }),
+
                     ],
                   ),
                 ),
