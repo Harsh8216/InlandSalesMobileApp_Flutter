@@ -62,7 +62,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       ),
       body: _selectedIndex == 0 ?
       Activity_Dashboard(onThemeChange: widget.onThemeChange)
-      : const Activity_Get_Location(),
+      : Activity_Get_Location(onThemeChange: widget.onThemeChange),
       endDrawer: SideNavigationDrawer(onThemeChange: widget.onThemeChange),
 
     );

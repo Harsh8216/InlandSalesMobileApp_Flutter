@@ -2,12 +2,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Network.dart';
+import 'package:inland_sales_upgrade/Utility.dart';
+import 'package:inland_sales_upgrade/ZigzagClipper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Activity_Get_Location extends StatefulWidget{
   static final GlobalKey<Activity_Get_Location_State> locationKey = GlobalKey<Activity_Get_Location_State>();
+  final Function(ThemeData) onThemeChange;
+  const Activity_Get_Location({
+    super.key,
+    required this.onThemeChange
+});
 
-  const Activity_Get_Location({super.key});
   @override
   State<StatefulWidget> createState() => Activity_Get_Location_State();
 
@@ -18,15 +24,10 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
   List<String> arrGetLocation = [];
   var GetLocation_txt = TextEditingController();
   bool isFocusNode = false;
-  String strPrefLocation = "";
-  var strEmpName = "";
-  var strEmpCode = "";
-  var strBranchLocation = "";
-  var strBranchAddress = "";
-  var strBranchLat = "";
-  var strBranchLong = "";
-  var strBranchRadius = "";
-  var strMeter = "Meter";
+
+  var strAcclocName = "", strPrefLocation = "",strEmpName = "",strEmpCode = "",strCurrBrcd = "",strBranchAddress = "",strBranchLat = "",strBranchLong = "",strBranchRadius = "",
+      strMeter = "Meter",strRegioncode = "",strAccloccode = "",strAcselectedlocationnameclocName = "",strLocationname = "", strSelectedLocationName,strSelectedLocationCode;
+  var selectedAcclocName = "",selectedAccloccode = "", selectedRegioncode = "",selectedlocationcode = "",selectedlocationname = "";
 
   @override
   void initState() {
@@ -36,31 +37,48 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
 
   }
 
-  Future<void>  LocationSaveData() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String strSaveLocation = pref.getString(Constant.Selected_Location) ?? 'No Location Selected';
-    var _strEmpName = pref.getString(Constant.Name) ?? '';
-    var _strEmpCode = pref.getString(Constant.Empcd) ?? '';
-    var _strBranchLocation = pref.getString(Constant.CurrBrcd) ?? '';
-    var _strBranchAddress = pref.getString(Constant.Branch_Address) ?? '';
-    var _strBranchLat = pref.getString(Constant.Branch_Lat) ?? '';
-    var _strBranchLong = pref.getString(Constant.Branch_Long) ?? '';
-    var _strBranchRadius = pref.getString(Constant.Branch_Radious) ?? '';
+  Future<void> GetUserLocationByChange() async{
+    var pref = await SharedPreferences.getInstance();
+    String ? strEmpcd = pref.getString(Constant.Empcd) ?? '';
 
-    setState(() {
-      strPrefLocation = strSaveLocation;
-      GetLocation_txt.text = strSaveLocation;
-      strEmpName = _strEmpName;
-      strEmpCode = _strEmpCode;
-      strBranchLocation = _strBranchLocation;
-      strBranchAddress = _strBranchAddress;
-      strBranchLat = _strBranchLat;
-      strBranchLong = _strBranchLong;
-      strBranchRadius = _strBranchRadius;
+    final Map<String,String> RequestBody = {
+      'empcd' : '$strEmpcd',
+      'Tokenno' : Constant.TokenNo,
+      'BranchCode' : "$strSelectedLocationCode"
 
-    });
+    };
+
+    try{
+      Map<String,dynamic> responseData = await ApiHelper.postRequest(EndPoint.GetUserLocationByChange, RequestBody);
+      print(responseData.length);
+
+      setState(() {
+        var selected_AcclocName = responseData["AcclocName"];
+        var selected_Accloccode = responseData["Accloccode"];
+        var selected_Regioncode = responseData["Regioncode"];
+        var selected_locationcode = responseData["locationcode"];
+        var selected_locationname = responseData["locationname"];
+
+        selectedAcclocName = selected_AcclocName;
+        selectedAccloccode = selected_Accloccode;
+        selectedlocationname = selected_locationname;
+        selectedlocationcode = selected_locationcode;
+        selectedRegioncode = selected_Regioncode;
+
+        pref.setString(Constant.AcclocName, selectedAcclocName);
+        pref.setString(Constant.Accloccode, selectedAccloccode);
+        pref.setString(Constant.CurrBrcd, selectedlocationcode);
+        pref.setString(Constant.Regioncode, selectedRegioncode);
+        pref.setString(Constant.Locationname, selectedlocationname);
+
+      });
+
+    }catch(e){
+      Utility().ShowToast("$e");
+
+    }
+
   }
-
 
   Future<void> getLocation() async{
     var pref = await SharedPreferences.getInstance();
@@ -68,17 +86,17 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
 
     final Map<String,String> RequestBody = {
       'empcd' : '$strEmpcd',
-      'Tokenno' : Constant.TokenNo
+      'Tokenno' : "2.4"
 
     };
 
     try{
       final http.Response response = await http.post(
-        Uri.parse(Constant.baseurl + EndPoint.GetLocation),
-        body: jsonEncode(RequestBody),
-        headers: {"Content-Type": "application/json"}
+          Uri.parse(Constant.baseurl + EndPoint.GetLocation),
+          body: jsonEncode(RequestBody),
+          headers: {"Content-Type": "application/json"}
 
-      );
+      ).timeout(Duration(seconds: 30));
 
       if(response.statusCode == 200){
         final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -87,7 +105,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
         setState(() {
           hmGetLocation = getLocationResult.map((location) => {
             'locationcode' : location['locationcode'].toString(),
-            'locationname' : location['locationname'].toString()
+            'locationname' : location['locationname'].toString(),
 
           }).toList();
           print('GetLocation : $hmGetLocation' );
@@ -98,15 +116,47 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
 
       }else{
         print("Error: ${response.statusCode} - ${response.reasonPhrase}");
-        //Utility().ShowToast("Error: ${response.statusCode} - ${response.reasonPhrase}");
       }
-
 
     }catch(e){
       print("An error occurred: $e");
-      //Utility().ShowToast("An error occurred: $e");
 
     }
+  }
+
+  Future<void>  LocationSaveData() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String strSaveLocation = pref.getString(Constant.Selected_Location) ?? 'No Location Selected';
+    String ? _strEmpName = pref.getString(Constant.Name) ?? '';
+    String ? _strEmpCode = pref.getString(Constant.Empcd) ?? '';
+    String ? _strCurrBrcd = pref.getString(Constant.CurrBrcd) ?? '';
+    String ? _strBranchAddress = pref.getString(Constant.Branch_Address) ?? '';
+    String ? _strBranchLat = pref.getString(Constant.Branch_Lat) ?? '';
+    String ? _strBranchLong = pref.getString(Constant.Branch_Long) ?? '';
+    String ? _strBranchRadius = pref.getString(Constant.Branch_Radious) ?? '';
+    String ? _strAccloccode = pref.getString(Constant.Accloccode) ?? '';
+    String ? _strAcclocName = pref.getString(Constant.AcclocName) ?? '';
+    String ? _strLocationname = pref.getString(Constant.Locationname) ?? '';
+    String ? _strRegioncode = pref.getString(Constant.Regioncode) ?? '';
+
+    setState(() {
+      strPrefLocation = strSaveLocation;
+      GetLocation_txt.text = strSaveLocation;
+      strEmpName = _strEmpName;
+      strEmpCode = _strEmpCode;
+
+      strBranchAddress = _strBranchAddress;
+      strBranchLat = _strBranchLat;
+      strBranchLong = _strBranchLong;
+      strBranchRadius = _strBranchRadius;
+
+      strAccloccode = _strAccloccode;
+      strAcclocName = _strAcclocName;
+      strLocationname = _strLocationname;
+      strRegioncode = _strRegioncode;
+      strCurrBrcd = _strCurrBrcd;
+
+    });
   }
 
   @override
@@ -132,33 +182,44 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
               Autocomplete<String> (
                 optionsBuilder: (TextEditingValue Textvalue){
                   print('Typed: ${Textvalue.text}');
-        
+
                   if(Textvalue.text.isNotEmpty){
                     return arrGetLocation.where((location) =>
                         location.toLowerCase().contains(
                             Textvalue.text.toLowerCase()));
-        
+
                   }else {
                     return const Iterable<String>.empty();
-        
+
                   }
-        
-        
+
                 },onSelected: (String selection) async {
                 print("Selected: $selection" );
-        
+
                 final selectedLocation = hmGetLocation.firstWhere((location) => location['locationname'] == selection,
                     orElse: () => {'locationcode': ''});
-        
                 GetLocation_txt.text = selectedLocation['locationcode'] ?? '';
+
                 SharedPreferences pref = await SharedPreferences.getInstance();
-                pref.setString(Constant.Selected_Location, selection);
-        
+
                 setState(() {
+                  final part = selection.split(" : ");
+                  var choseLocationName = part[0];
+                  var choseLocationCode = part.length >1 ? part[1] : '';
+                  strSelectedLocationCode = choseLocationCode;
                   strPrefLocation = selection;
                   GetLocation_txt.text = selection;
-        
+
+                  if(strSelectedLocationCode.isNotEmpty){
+                    pref.setString(Constant.Selected_LocationCode, choseLocationCode);
+                    pref.setString(Constant.Selected_LocationName, choseLocationName);
+                    pref.setString(Constant.Selected_Location, selection);
+
+                  }
+
                 });
+
+                GetUserLocationByChange();
         
               },
                 fieldViewBuilder: (context,controller,focusNode,onEditingComplete){
@@ -245,7 +306,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
         
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 50),
                 child: Card(
                   color: Colors.white,
                   elevation: 6,
@@ -253,15 +314,15 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                     child: Container(
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
+                          ClipPath(
+                            clipper: ZigzagClipper(),
                             child: Container(
-                              height: 25,
+                              height: 40,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(6),topRight: Radius.circular(6)),
                                 color: Theme.of(context).primaryColor,
                               ),
-        
+
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -270,64 +331,41 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                       fontWeight: FontWeight.w900,
                                       fontSize: 16,
                                       color: Theme.of(context).canvasColor
-        
+
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text("Employee Code : ",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-        
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Text(strEmpCode,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Theme.of(context).primaryColor
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text("Branch Location : ",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text(strBranchLocation,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: Theme.of(context).primaryColor
-                                    ),
-                                  ),
-                                ),
-        
-                              ],
+                            padding: const EdgeInsets.only(left: 10,top: 10),
+                            child: BuildTextView(context, "Employee Code : ", "$strEmpCode"),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10,left: 10),
+                            child: BuildTextView(context, "Current Location : ",
+                                selectedlocationname.isNotEmpty && selectedlocationcode.isNotEmpty ?
+                                "$selectedlocationname - $selectedlocationcode" : "$strLocationname - $strCurrBrcd"
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10,left: 10),
+                            child: BuildTextView(context, "ACC Location: ",
+                                selectedAcclocName.isNotEmpty  && selectedAccloccode.isNotEmpty ?
+                                "$selectedAcclocName - $selectedAccloccode" : "$strAcclocName - $strAccloccode"),
+
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10,left: 10),
+                            child: BuildTextView(context, "Region Code : ",
+                                selectedRegioncode.isNotEmpty ? "$selectedRegioncode" : "$strRegioncode"
+                            ),
+                          ),
+
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: Row(
@@ -336,10 +374,10 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                   padding: EdgeInsets.only(left: 10),
                                   child: Text("Branch LatLong : ",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w900,
                                     ),
-        
+
                                   ),
                                 ),
                                 Padding(
@@ -349,59 +387,39 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                       Text(strBranchLat,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Theme.of(context).primaryColor
                                         ),
-        
+
                                       ),
-                                      const Text('/',
+                                      const Text(' | ',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 18,
+                                            fontSize: 15,
                                         ),),
-        
+
                                       Text(strBranchLong,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Theme.of(context).primaryColor
                                         ),
-        
+
                                       ),
-        
+
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
+
+
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text("Branch Radius : ",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text("$strBranchRadius $strMeter",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: Theme.of(context).primaryColor
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            padding: const EdgeInsets.only(top: 10,left: 10),
+                            child: BuildTextView(context, "Branch Radius : ", "$strBranchRadius $strMeter"),
                           ),
-        
+
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -412,7 +430,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                   style: BorderStyle.solid
                                 ),
                                 borderRadius: BorderRadius.circular(10)
-        
+
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 5),
@@ -426,7 +444,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                           fontSize: 10,
                                           fontWeight: FontWeight.w900,
                                         ),
-        
+
                                       ),
                                     ),
                                     Padding(
@@ -434,7 +452,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                                       child: Text(strBranchAddress,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Theme.of(context).primaryColor
                                         ),
                                       ),
@@ -444,7 +462,7 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                               ),
                             ),
                           ),
-        
+
                           Padding(
                             padding: const EdgeInsets.only(top: 10,bottom: 10),
                             child: Row(
@@ -470,18 +488,65 @@ class Activity_Get_Location_State extends State<Activity_Get_Location>{
                             ),
                           ),
                         ],
+
                       ),
+
+
                     ),
+
                   ),
-        
+
                 ),
-              )
+              ),
+              /*Padding(padding: const EdgeInsets.only(top: 20),
+                child: ElevatedButton(onPressed: (){
+                  //LocationSaveData();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar(onThemeChange: widget.onThemeChange)));
+
+                }, child: Text("SAVE",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18
+                  ),
+                ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    minimumSize: const Size(180, 50)
+                  ),
+                ),
+              )*/
             ],
+
           ),
-        
+
         ),
-      )
+
+      ),
     );
+  }
+
+  Widget BuildTextView(BuildContext context,String strTxtMain,String strTxtfromJson){
+    return Row(
+      children: [
+        Text(strTxtMain,
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text("$strTxtfromJson",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Theme.of(context).primaryColor
+            ),
+          ),
+        ),
+      ],
+    );
+
   }
 
 }

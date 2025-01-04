@@ -22,7 +22,6 @@ class State_AppliedLoanList extends State<Activity_AppliedLoanList>{
   var arrLoanDetails = [];
   bool isLoading = true;
 
-
   @override
   void initState() {
     super.initState();

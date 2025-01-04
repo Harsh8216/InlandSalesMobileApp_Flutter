@@ -44,6 +44,8 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   android_intent_plus: ^3.0.1
   package_info_plus: ^4.0.0
+  geolocator: ^9.0.2
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

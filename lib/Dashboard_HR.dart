@@ -50,7 +50,7 @@ class ActivityApplyLeaves_State extends State<Activity_Apply_Leaves> {
 
               Utility().BuildCircleMenuItems("Apply For Loan", Icons.local_atm, Theme.of(context).primaryColor, () async {
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => Activity_Leave_List(onThemeChange: widget.onThemeChange,)));
+                    builder: (context) => Activity_AppliedLoanList(onThemeChange: widget.onThemeChange,)));
               }),
             ],
           ),

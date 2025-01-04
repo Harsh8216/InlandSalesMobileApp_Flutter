@@ -48,7 +48,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
       var _strEmpName = pref.getString(Constant.Name) ?? '';
       var _UserId = pref.getString(Constant.Empcd) ?? '';
       var _Location = pref.getString(Constant.CurrBrcd) ?? '';
-      var _strSelectedLocation = pref.getString(Constant.Selected_Location) ?? 'No Location Selected';
+      var _strSelectedLocation = pref.getString(Constant.Locationname) ?? 'No Location Selected';
       var imageURL = pref.getString(Constant.UserImage) ?? "";
 
 
@@ -75,10 +75,14 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
             SizedBox(
               height: 220,
               child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                    color: Theme.of(context).primaryColor
+                ),
                   accountName: Text(strEmpName,
                       style: TextStyle(
                           color: Theme.of(context).canvasColor,
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold)),
 
                   accountEmail: Column(
@@ -86,15 +90,15 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                     children: [
                       Text("User Id : $strUserId",
                           style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Theme.of(context).canvasColor,
                               fontWeight: FontWeight.bold)),
                       const SizedBox(
                         height: 4,
                       ),
-                      Text('Location : ${strSelectedLocation.isNotEmpty ? strLocation : strSelectedLocation}',
+                      Text('Location : ${strSelectedLocation.isEmpty ? strLocation : strSelectedLocation}',
                           style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 12,
                               color: Theme.of(context).canvasColor,
                               fontWeight: FontWeight.bold))
                     ],
@@ -102,18 +106,15 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
 
-                    child: UserImage == null || UserImage.isEmpty
+                    child: UserImage.isEmpty
                         ? Text(strEmpName.isNotEmpty ? strEmpName[0].toUpperCase() : 'N/A',
                         style: TextStyle(
                             fontSize: 30.0,
                             color: Theme.of(context).primaryColor
               )): null,
-                 backgroundImage: UserImage != null && UserImage.isNotEmpty
+                 backgroundImage: UserImage.isNotEmpty
                   ? NetworkImage(UserImage) : null
                   ),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor
-                  )
               ),
             ),
             BuildDrawerMenuItems(Icons.home, 'Home', () {
@@ -123,7 +124,7 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
 
             BuildDrawerMenuItems(
                 Icons.edit_location_alt, 'Change Location', () async{
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Activity_Get_Location()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_Get_Location(onThemeChange: widget.onThemeChange)));
 
             }),
 
@@ -171,6 +172,8 @@ class _SideNavigationDrawerState extends State<SideNavigationDrawer> {
     var pref = await SharedPreferences.getInstance();
     await pref.remove("user_id");
     await pref.remove("Password");
+
+    //await SharedPreferences.getInstance().then((pref) => pref.clear());
 
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

@@ -19,7 +19,9 @@ class Constant{
   static const String UserImage = "UserImage";
   static const String Regioncode = "Regioncode";
 
-  static const String Selected_Location = "Selected_Location";
+  static const String Selected_Location  = "Selected_Location";
+  static const String Selected_LocationName  = "Selected_LocationName";
+  static const String Selected_LocationCode  = "Selected_LocationCode";
 }
 
 class EndPoint{
@@ -36,5 +38,8 @@ class EndPoint{
   static const String GetLoaneligible = "/GetLoaneligible";
   static const String GetLoanApply = "/LoanApply";
   static const String GetVisitList = "/GetVisitList";
+  static const String GetUserLocationByChange = "/GetUserLocationByChange";
+  static const String MYvisitEntry_Insert = "/MYvisitEntry_Insert";
+  static const String MyVisitEntryDrp = "/MyVisitEntryDrp";
 
 }

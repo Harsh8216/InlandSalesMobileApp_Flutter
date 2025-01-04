@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:inland_sales_upgrade/Activity_Visit_Entry.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 import 'package:inland_sales_upgrade/Utility.dart';
+
+import 'Visit_Entry_List.dart';
 
 class DashBoard_My_Activity extends StatefulWidget {
   final Function(ThemeData) onThemeChange;
@@ -36,7 +37,7 @@ class _DashBoard_My_ActivityState extends State<DashBoard_My_Activity> {
                    Icons.note_alt,
                    Theme.of(context).primaryColor,
                    (){
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityVisitEntry(onThemeChange: widget.onThemeChange)));
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityVisitEntryList(onThemeChange: widget.onThemeChange)));
 
 
                    }),
