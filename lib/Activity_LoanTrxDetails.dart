@@ -23,6 +23,7 @@ class Activity_LoanTrxDetails extends StatefulWidget{
 class LoanTrxDetails extends State<Activity_LoanTrxDetails>{
   var arrDataList = [];
   var _strLoadId;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -49,10 +50,16 @@ class LoanTrxDetails extends State<Activity_LoanTrxDetails>{
 
       setState(() {
      arrDataList = ResponseBody;
+     isLoading = false;
    });
 
     }catch(e){
       Utility().ShowToast("$e");
+      setState(() {
+        arrDataList = [];
+        isLoading = false;
+
+      });
 
     }
 
@@ -76,7 +83,13 @@ class LoanTrxDetails extends State<Activity_LoanTrxDetails>{
              color: Theme.of(context).canvasColor
          )),
 
-     body: Padding(
+     body: isLoading
+         ? Utility().showProcessDialog()
+         : arrDataList.isEmpty
+         ? Center(
+       child: Utility().NoDataFound()
+     ) :
+     Padding(
        padding: const EdgeInsets.all(10.0),
        child: Container(
          height: 400,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inland_sales_upgrade/Activity_AppliedLoanList.dart';
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
+import 'package:inland_sales_upgrade/Utility.dart';
 
 class Activity_Apply_Leaves extends StatefulWidget {
   final Function(ThemeData) onThemeChange;
@@ -42,48 +43,21 @@ class ActivityApplyLeaves_State extends State<Activity_Apply_Leaves> {
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             children: [
-              MenuCardView(Icons.holiday_village, "Apply Leaves", () async {
+              Utility().BuildCircleMenuItems("Apply Leaves", Icons.holiday_village, Theme.of(context).primaryColor, () async {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => Activity_Leave_List(onThemeChange: widget.onThemeChange,)));
               }),
 
-              MenuCardView(Icons.local_atm, "Apply For Loan", () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Activity_AppliedLoanList(onThemeChange: widget.onThemeChange)));
-              })
+              Utility().BuildCircleMenuItems("Apply For Loan", Icons.local_atm, Theme.of(context).primaryColor, () async {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Activity_AppliedLoanList(onThemeChange: widget.onThemeChange,)));
+              }),
             ],
           ),
 
         ),
       ),
 
-    );
-  }
-
-  Widget MenuCardView(IconData iconData, String MenuName,
-      VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Card(
-        elevation: 8,
-        color: Theme.of(context).cardColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(iconData,
-                color: Theme
-                    .of(context)
-                    .indicatorColor,
-                size: 55),
-            Padding(padding: const EdgeInsets.only(top: 10),
-                child: Text(MenuName,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).hoverColor
-                    )))
-          ],
-        ),
-      ),
     );
   }
 }

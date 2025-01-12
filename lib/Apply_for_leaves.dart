@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:inland_sales_upgrade/Activity_Leave_List.dart';
 import 'package:inland_sales_upgrade/Custom_Color_file.dart';
-import 'package:inland_sales_upgrade/Edit_Text_Controler.dart';
 import 'package:inland_sales_upgrade/Network.dart';
 import 'package:inland_sales_upgrade/Side_Navigation_Drawer.dart';
 import 'package:inland_sales_upgrade/Utility.dart';
@@ -253,9 +252,9 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                      padding: const EdgeInsets.only(right: 2.5),
                      child: EditTextField(
                        controller: FromDateController,
-                       lable: "From Date",
+                       label: "From Date",
                        inputType: TextInputType.none,
-                       onTap: () => _selectDate(context,FromDateController),
+                       onTap: () => Utility().selectDate(context,FromDateController),
                        readOnly: true,
                      ),
                    )),
@@ -266,9 +265,9 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                      padding: const EdgeInsets.only(right: 2.5),
                      child: EditTextField(
                        controller: ToDateController,
-                       lable: "To Date",
+                       label: "To Date",
                        inputType: TextInputType.none,
-                       onTap: () => _selectDate(context,ToDateController),
+                       onTap: () => Utility().selectDate(context,ToDateController),
                        readOnly: true,
                      ),
                    )),
@@ -294,6 +293,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
                      orElse: () => {'ResPersonEmpcd': ''});
                  ResposiblePersonController.text = selectedPerson['ResPersonEmpcd'] ?? '';
            },
+
              fieldViewBuilder: (context, controller,focusNode,onEditingComplete){
                  focusNode.addListener((){
                    setState(() {
@@ -388,7 +388,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
            
            EditTextField(
               controller:  ContactNoController,
-              lable:  "Contact No",
+               label:  "Contact No",
               readOnly: false,
               inputType:  TextInputType.phone,
               onTap:() {},
@@ -398,7 +398,7 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
 
            EditTextField(
               controller:  ReasonController,
-              lable:  "Reason",
+             label:  "Reason",
               inputType:  TextInputType.multiline,
               onTap:() {},
               readOnly: false,
@@ -424,40 +424,6 @@ class ApplyForLeavesStates extends State<Apply_for_leaves> {
      ),
 
    );
-  }
-
-}
-
-
-Future<void> _selectDate(BuildContext context,TextEditingController controller) async{
-  DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-
-  builder: (context,child){
-        return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: Theme.of(context).primaryColor,
-                onPrimary: Colors.white,
-                onSurface: Colors.black,
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: Theme.of(context).primaryColor,
-                )
-              )
-
-            ),
-            child: child!);
-
-  }
-  );
-
-  if(selectedDate != null){
-    controller.text = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
   }
 
 }
